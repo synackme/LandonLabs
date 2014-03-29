@@ -1,0 +1,2358 @@
+
+    * About
+    * Contact_us
+    * Forums
+    * Home
+    * Linux_How-to_&amp;_Tutorials
+    * Shell_Scripts
+    * RSS/Feed
+
+nixCraft
+****** 20 Linux System Monitoring Tools Every SysAdmin Should Know ******
+by NIX_Craft on June 27, 2009 · 341_comments· LAST UPDATED January 1, 2014
+in CentOS, Debian_Linux, fedora_linux
+Need to monitor Linux server performance? Try these built-in commands and a few
+add-on tools. Most Linux distributions are equipped with tons of monitoring.
+These tools provide metrics which can be used to get information about system
+activities. You can use these tools to find the possible causes of a
+performance problem. The commands discussed below are some of the most basic
+commands when it comes to system analysis and debugging server issues such as:
+   1. Finding out bottlenecks.
+   2. Disk (storage) bottlenecks.
+   3. CPU and memory bottlenecks.
+   4. Network bottlenecks.
+
+***** #1: top - Process Activity Command *****
+The top program provides a dynamic real-time view of a running system i.e.
+actual process activity. By default, it displays the most CPU-intensive tasks
+running on the server and updates the list every five seconds.
+[Fig.01:_Linux_top_command]
+Fig.01: Linux top command
+**** Commonly Used Hot Keys ****
+The top command provides several useful hot keys:
+Hot Key Usage
+t       Displays summary information off and on.
+m       Displays memory information off and on.
+A       Sorts the display by top consumers of various system resources. Useful
+        for quick identification of performance-hungry tasks on a system.
+f       Enters an interactive configuration screen for top. Helpful for setting
+        up top for a specific task.
+o       Enables you to interactively select the ordering within top.
+r       Issues renice command.
+k       Issues kill command.
+z       Turn on or off color/mono
+
+=> Related: How_do_I_Find_Out_Linux_CPU_Utilization?
+***** #2: vmstat - System Activity, Hardware and System Information *****
+The command vmstat reports information about processes, memory, paging, block
+IO, traps, and cpu activity.
+# vmstat 3
+Sample Outputs:
+procs -----------memory---------- ---swap-- -----io---- --system-- -----cpu----
+--
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa
+st
+ 0  0      0 2540988 522188 5130400    0    0     2    32    4    2  4  1 96  0
+0
+ 1  0      0 2540988 522188 5130400    0    0     0   720 1199  665  1  0 99  0
+0
+ 0  0      0 2540956 522188 5130400    0    0     0     0 1151 1569  4  1 95  0
+0
+ 0  0      0 2540956 522188 5130500    0    0     0     6 1117  439  1  0 99  0
+0
+ 0  0      0 2540940 522188 5130512    0    0     0   536 1189  932  1  0 98  0
+0
+ 0  0      0 2538444 522188 5130588    0    0     0     0 1187 1417  4  1 96  0
+0
+ 0  0      0 2490060 522188 5130640    0    0     0    18 1253 1123  5  1 94  0
+0
+**** Display Memory Utilization Slabinfo ****
+# vmstat -m
+**** Get Information About Active / Inactive Memory Pages ****
+# vmstat -a
+=> Related: How_do_I_find_out_Linux_Resource_utilization_to_detect_system
+bottlenecks?
+***** #3: w - Find Out Who Is Logged on And What They Are Doing *****
+w command displays information about the users currently on the machine, and
+their processes.
+# w username
+# w vivek
+Sample Outputs:
+ 17:58:47 up 5 days, 20:28,  2 users,  load average: 0.36, 0.26, 0.24
+USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT
+root     pts/0    10.1.3.145       14:55    5.00s  0.04s  0.02s vim /etc/
+resolv.conf
+root     pts/1    10.1.3.145       17:43    0.00s  0.03s  0.00s w
+**** #4: uptime - Tell How Long The System Has Been Running ****
+The uptime command can be used to see how long the server has been running. The
+current time, how long the system has been running, how many users are
+currently logged on, and the system load averages for the past 1, 5, and 15
+minutes.
+# uptime
+Output:
+ 18:02:41 up 41 days, 23:42,  1 user,  load average: 0.00, 0.00, 0.00
+1 can be considered as optimal load value. The load can change from system to
+system. For a single CPU system 1 - 3 and SMP systems 6-10 load value might be
+acceptable.
+***** #5: ps - Displays The Processes *****
+ps command will report a snapshot of the current processes. To select all
+processes use the -A or -e option:
+# ps -A
+Sample Outputs:
+  PID TTY          TIME CMD
+    1 ?        00:00:02 init
+    2 ?        00:00:02 migration/0
+    3 ?        00:00:01 ksoftirqd/0
+    4 ?        00:00:00 watchdog/0
+    5 ?        00:00:00 migration/1
+    6 ?        00:00:15 ksoftirqd/1
+....
+.....
+ 4881 ?        00:53:28 java
+ 4885 tty1     00:00:00 mingetty
+ 4886 tty2     00:00:00 mingetty
+ 4887 tty3     00:00:00 mingetty
+ 4888 tty4     00:00:00 mingetty
+ 4891 tty5     00:00:00 mingetty
+ 4892 tty6     00:00:00 mingetty
+ 4893 ttyS1    00:00:00 agetty
+12853 ?        00:00:00 cifsoplockd
+12854 ?        00:00:00 cifsdnotifyd
+14231 ?        00:10:34 lighttpd
+14232 ?        00:00:00 php-cgi
+54981 pts/0    00:00:00 vim
+55465 ?        00:00:00 php-cgi
+55546 ?        00:00:00 bind9-snmp-stat
+55704 pts/1    00:00:00 ps
+ps is just like top but provides more information.
+**** Show Long Format Output ****
+# ps -Al
+To turn on extra full mode (it will show command line arguments passed to
+process):
+# ps -AlF
+**** To See Threads ( LWP and NLWP) ****
+# ps -AlFH
+**** To See Threads After Processes ****
+# ps -AlLm
+**** Print All Process On The Server ****
+# ps ax
+# ps axu
+**** Print A Process Tree ****
+# ps -ejH
+# ps axjf
+# pstree
+**** Print Security Information ****
+# ps -eo euser,ruser,suser,fuser,f,comm,label
+# ps axZ
+# ps -eM
+**** See Every Process Running As User Vivek ****
+# ps -U vivek -u vivek u
+**** Set Output In a User-Defined Format ****
+# ps -eo pid,tid,class,rtprio,ni,pri,psr,pcpu,stat,wchan:14,comm
+# ps axo stat,euid,ruid,tty,tpgid,sess,pgrp,ppid,pid,pcpu,comm
+# ps -eopid,tt,user,fname,tmout,f,wchan
+**** Display Only The Process IDs of Lighttpd ****
+# ps -C lighttpd -o pid=
+OR
+# pgrep lighttpd
+OR
+# pgrep -u vivek php-cgi
+**** Display The Name of PID 55977 ****
+# ps -p 55977 -o comm=
+**** Find Out The Top 10 Memory Consuming Process ****
+# ps -auxf | sort -nr -k 4 | head -10
+**** Find Out top 10 CPU Consuming Process ****
+# ps -auxf | sort -nr -k 3 | head -10
+***** #6: free - Memory Usage *****
+The command free displays the total amount of free and used physical and swap
+memory in the system, as well as the buffers used by the kernel.
+# free
+Sample Output:
+            total       used       free     shared    buffers     cached
+Mem:      12302896    9739664    2563232          0     523124    5154740
+-/+ buffers/cache:    4061800    8241096
+Swap:      1052248          0    1052248
+=> Related: :
+   1. Linux_Find_Out_Virtual_Memory_PAGESIZE
+   2. Linux_Limit_CPU_Usage_Per_Process
+   3. How_much_RAM_does_my_Ubuntu_/_Fedora_Linux_desktop_PC_have?
+***** #7: iostat - Average CPU Load, Disk Activity *****
+The command iostat report Central Processing Unit (CPU) statistics and input/
+output statistics for devices, partitions and network filesystems (NFS).
+# iostat
+Sample Outputs:
+Linux 2.6.18-128.1.14.el5 (www03.nixcraft.in) 	06/26/2009
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           3.50    0.09    0.51    0.03    0.00   95.86
+Device:            tps   Blk_read/s   Blk_wrtn/s   Blk_read   Blk_wrtn
+sda              22.04        31.88       512.03   16193351  260102868
+sda1              0.00         0.00         0.00       2166        180
+sda2             22.04        31.87       512.03   16189010  260102688
+sda3              0.00         0.00         0.00       1615          0
+=> Related: : Linux_Track_NFS_Directory_/_Disk_I/O_Stats
+***** #8: sar - Collect and Report System Activity *****
+The sar command is used to collect, report, and save system activity
+information. To see network counter, enter:
+# sar -n DEV | more
+To display the network counters from the 24th:
+# sar -n DEV -f /var/log/sa/sa24 | more
+You can also display real time usage using sar:
+# sar 4 5
+Sample Outputs:
+Linux 2.6.18-128.1.14.el5 (www03.nixcraft.in) 		06/26/2009
+06:45:12 PM       CPU     %user     %nice   %system   %iowait    %steal
+%idle
+06:45:16 PM       all      2.00      0.00      0.22      0.00      0.00
+97.78
+06:45:20 PM       all      2.07      0.00      0.38      0.03      0.00
+97.52
+06:45:24 PM       all      0.94      0.00      0.28      0.00      0.00
+98.78
+06:45:28 PM       all      1.56      0.00      0.22      0.00      0.00
+98.22
+06:45:32 PM       all      3.53      0.00      0.25      0.03      0.00
+96.19
+Average:          all      2.02      0.00      0.27      0.01      0.00
+97.70
+=> Related: : How_to_collect_Linux_system_utilization_data_into_a_file
+***** #9: mpstat - Multiprocessor Usage *****
+The mpstat command displays activities for each available processor, processor
+0 being the first one. mpstat -P ALL to display average CPU utilization per
+processor:
+# mpstat -P ALL
+Sample Output:
+Linux 2.6.18-128.1.14.el5 (www03.nixcraft.in)	 	06/26/2009
+06:48:11 PM  CPU   %user   %nice    %sys %iowait    %irq   %soft  %steal
+%idle    intr/s
+06:48:11 PM  all    3.50    0.09    0.34    0.03    0.01    0.17    0.00
+95.86   1218.04
+06:48:11 PM    0    3.44    0.08    0.31    0.02    0.00    0.12    0.00
+96.04   1000.31
+06:48:11 PM    1    3.10    0.08    0.32    0.09    0.02    0.11    0.00
+96.28     34.93
+06:48:11 PM    2    4.16    0.11    0.36    0.02    0.00    0.11    0.00
+95.25      0.00
+06:48:11 PM    3    3.77    0.11    0.38    0.03    0.01    0.24    0.00
+95.46     44.80
+06:48:11 PM    4    2.96    0.07    0.29    0.04    0.02    0.10    0.00
+96.52     25.91
+06:48:11 PM    5    3.26    0.08    0.28    0.03    0.01    0.10    0.00
+96.23     14.98
+06:48:11 PM    6    4.00    0.10    0.34    0.01    0.00    0.13    0.00
+95.42      3.75
+06:48:11 PM    7    3.30    0.11    0.39    0.03    0.01    0.46    0.00
+95.69     76.89
+=> Related: : Linux_display_each_multiple_SMP_CPU_processors_utilization
+individually.
+***** #10: pmap - Process Memory Usage *****
+The command pmap report memory map of a process. Use this command to find out
+causes of memory bottlenecks.
+# pmap -d PID
+To display process memory information for pid # 47394, enter:
+# pmap -d 47394
+Sample Outputs:
+47394:   /usr/bin/php-cgi
+Address           Kbytes Mode  Offset           Device    Mapping
+0000000000400000    2584 r-x-- 0000000000000000 008:00002 php-cgi
+0000000000886000     140 rw--- 0000000000286000 008:00002 php-cgi
+00000000008a9000      52 rw--- 00000000008a9000 000:00000   [ anon ]
+0000000000aa8000      76 rw--- 00000000002a8000 008:00002 php-cgi
+000000000f678000    1980 rw--- 000000000f678000 000:00000   [ anon ]
+000000314a600000     112 r-x-- 0000000000000000 008:00002 ld-2.5.so
+000000314a81b000       4 r---- 000000000001b000 008:00002 ld-2.5.so
+000000314a81c000       4 rw--- 000000000001c000 008:00002 ld-2.5.so
+000000314aa00000    1328 r-x-- 0000000000000000 008:00002 libc-2.5.so
+000000314ab4c000    2048 ----- 000000000014c000 008:00002 libc-2.5.so
+.....
+......
+..
+00002af8d48fd000       4 rw--- 0000000000006000 008:00002 xsl.so
+00002af8d490c000      40 r-x-- 0000000000000000 008:00002 libnss_files-2.5.so
+00002af8d4916000    2044 ----- 000000000000a000 008:00002 libnss_files-2.5.so
+00002af8d4b15000       4 r---- 0000000000009000 008:00002 libnss_files-2.5.so
+00002af8d4b16000       4 rw--- 000000000000a000 008:00002 libnss_files-2.5.so
+00002af8d4b17000  768000 rw-s- 0000000000000000 000:00009 zero (deleted)
+00007fffc95fe000      84 rw--- 00007ffffffea000 000:00000   [ stack ]
+ffffffffff600000    8192 ----- 0000000000000000 000:00000   [ anon ]
+mapped: 933712K    writeable/private: 4304K    shared: 768000K
+The last line is very important:
+    * mapped: 933712K total amount of memory mapped to files
+    * writeable/private: 4304K the amount of private address space
+    * shared: 768000K the amount of address space this process is sharing with
+      others
+=> Related: : Linux_find_the_memory_used_by_a_program_/_process_using_pmap
+command
+***** #11 and #12: netstat and ss - Network Statistics *****
+The command netstat displays network connections, routing tables, interface
+statistics, masquerade connections, and multicast memberships. ss command is
+used to dump socket statistics. It allows showing information similar to
+netstat. See the following resources about ss and netstat commands:
+    * ss:_Display_Linux_TCP_/_UDP_Network_and_Socket_Information
+    * Get_Detailed_Information_About_Particular_IP_address_Connections_Using
+      netstat_Command
+***** #13: iptraf - Real-time Network Statistics *****
+The iptraf command is interactive colorful IP LAN monitor. It is an ncurses-
+based IP LAN monitor that generates various network statistics including TCP
+info, UDP counts, ICMP and OSPF information, Ethernet load info, node stats, IP
+checksum errors, and others. It can provide the following info in easy to read
+format:
+    * Network traffic statistics by TCP connection
+    * IP traffic statistics by network interface
+    * Network traffic statistics by protocol
+    * Network traffic statistics by TCP/UDP port and by packet size
+    * Network traffic statistics by Layer2 address
+[Fig.02:_General_interface_statistics:_IP_traffic_statistics_by_network
+interface_]
+Fig.02: General interface statistics: IP traffic statistics by network
+interface
+[Fig.03_Network_traffic_statistics_by_TCP_connection]
+Fig.03 Network traffic statistics by TCP connection
+***** #14: tcpdump - Detailed Network Traffic Analysis *****
+The tcpdump is simple command that dump traffic on a network. However, you need
+good understanding of TCP/IP protocol to utilize this tool. For.e.g to display
+traffic info about DNS, enter:
+# tcpdump -i eth1 'udp port 53'
+To display all IPv4 HTTP packets to and from port 80, i.e. print only packets
+that contain data, not, for example, SYN and FIN packets and ACK-only packets,
+enter:
+# tcpdump 'tcp port 80 and (((ip[2:2] - ((ip[0]&amp;0xf)<<2)) - ((tcp
+[12]&amp;0xf0)>>2)) != 0)'
+To display all FTP session to 202.54.1.5, enter:
+# tcpdump -i eth1 'dst 202.54.1.5 and (port 21 or 20'
+To display all HTTP session to 192.168.1.5:
+# tcpdump -ni eth0 'dst 192.168.1.5 and tcp and port http'
+Use wireshark_to_view_detailed information about files, enter:
+# tcpdump -n -i eth1 -s 0 -w output.txt src or dst port 80
+***** #15: strace - System Calls *****
+Trace system calls and signals. This is useful for debugging webserver and
+other server problems. See how to use to trace_the_process_and see What it is
+doing.
+***** #16: /Proc file system - Various Kernel Statistics *****
+/proc file system provides detailed information about various hardware devices
+and other Linux kernel information. See Linux_kernel_/proc documentations for
+further details. Common /proc examples:
+# cat /proc/cpuinfo
+# cat /proc/meminfo
+# cat /proc/zoneinfo
+# cat /proc/mounts
+***** 17#: Nagios - Server And Network Monitoring *****
+Nagios is a popular open source computer system and network monitoring
+application software. You can easily monitor all your hosts, network equipment
+and services. It can send alert when things go wrong and again when they get
+better. FAN_is "Fully Automated Nagios". FAN goals are to provide a Nagios
+installation including most tools provided by the Nagios Community. FAN
+provides a CDRom image in the standard ISO format, making it easy to easilly
+install a Nagios server. Added to this, a wide bunch of tools are including to
+the distribution, in order to improve the user experience around Nagios.
+***** 18#: Cacti - Web-based Monitoring Tool *****
+Cacti is a complete network graphing solution designed to harness the power of
+RRDTool's data storage and graphing functionality. Cacti provides a fast
+poller, advanced graph templating, multiple data acquisition methods, and user
+management features out of the box. All of this is wrapped in an intuitive,
+easy to use interface that makes sense for LAN-sized installations up to
+complex networks with hundreds of devices. It can provide data about network,
+CPU, memory, logged in users, Apache, DNS servers and much more. See how to
+install_and_configure_Cacti_network_graphing tool under CentOS / RHEL.
+***** #19: KDE System Guard - Real-time Systems Reporting and Graphing *****
+KSysguard is a network enabled task and system monitor application for KDE
+desktop. This tool can be run over ssh session. It provides lots of features
+such as a client/server architecture that enables monitoring of local and
+remote hosts. The graphical front end uses so-called sensors to retrieve the
+information it displays. A sensor can return simple values or more complex
+information like tables. For each type of information, one or more displays are
+provided. Displays are organized in worksheets that can be saved and loaded
+independently from each other. So, KSysguard is not only a simple task manager
+but also a very powerful tool to control large server farms.
+[Fig.05_KDE_System_Guard]
+Fig.05 KDE System Guard {Image credit: Wikipedia}
+See the_KSysguard_handbook for detailed usage.
+***** #20: Gnome System Monitor - Real-time Systems Reporting and Graphing
+*****
+The System Monitor application enables you to display basic system information
+and monitor system processes, usage of system resources, and file systems. You
+can also use System Monitor to modify the behavior of your system. Although not
+as powerful as the KDE System Guard, it provides the basic information which
+may be useful for new users:
+    * Displays various basic information about the computer's hardware and
+      software.
+    * Linux Kernel version
+    * GNOME version
+    * Hardware
+    * Installed memory
+    * Processors and speeds
+    * System Status
+    * Currently available disk space
+    * Processes
+    * Memory and swap space
+    * Network usage
+    * File Systems
+    * Lists all mounted filesystems along with basic information about each.
+[Fig.06_The_Gnome_System_Monitor_application]
+Fig.06 The Gnome System Monitor application
+***** Bonus: Additional Tools *****
+A few more tools:
+    * nmap - scan your server for open ports.
+    * lsof - list open files, network connections and much more.
+    * ntop web based tool - ntop is the best tool to see network usage in a way
+      similar to what top command does for processes i.e. it is network traffic
+      monitoring software. You can see network status, protocol wise
+      distribution of traffic for UDP, TCP, DNS, HTTP and other protocols.
+    * Conky - Another good monitoring tool for the X Window System. It is
+      highly configurable and is able to monitor many system variables
+      including the status of the CPU, memory, swap space, disk storage,
+      temperatures, processes, network interfaces, battery power, system
+      messages, e-mail inboxes etc.
+    * GKrellM - It can be used to monitor the status of CPUs, main memory, hard
+      disks, network interfaces, local and remote mailboxes, and many other
+      things.
+    * vnstat - vnStat is a console-based network traffic monitor. It keeps a
+      log of hourly, daily and monthly network traffic for the selected
+      interface(s).
+    * htop - htop is an enhanced version of top, the interactive process
+      viewer, which can display the list of processes in a tree form.
+    * mtr - mtr combines the functionality of the traceroute and ping programs
+      in a single network diagnostic tool.
+Did I miss something? Please add your favorite system motoring tool in the
+comments.
+TwitterFacebookGoogle+PDF_versionFound_an_error/typo_on_this_page?_Help_us!
+Featured Articles:
+    * 30_Cool_Open_Source_Software_I_Discovered_in_2013
+    * 30_Handy_Bash_Shell_Aliases_For_Linux_/_Unix_/_Mac_OS_X
+    * Top_30_Nmap_Command_Examples_For_Sys/Network_Admins
+    * 25_PHP_Security_Best_Practices_For_Sys_Admins
+    * 20_Linux_System_Monitoring_Tools_Every_SysAdmin_Should_Know
+    * 20_Linux_Server_Hardening_Security_Tips
+    * Linux:_20_Iptables_Examples_For_New_SysAdmins
+    * Top_20_OpenSSH_Server_Best_Security_Practices
+    * Top_20_Nginx_WebServer_Best_Security_Practices
+    * 20_Examples:_Make_Sure_Unix_/_Linux_Configuration_Files_Are_Free_From
+      Syntax_Errors
+    * 15_Greatest_Open_Source_Terminal_Applications_Of_2012
+    * My_10_UNIX_Command_Line_Mistakes
+    * Top_10_Open_Source_Web-Based_Project_Management_Software
+    * Top_5_Email_Client_For_Linux,_Mac_OS_X,_and_Windows_Users
+    * The_Novice_Guide_To_Buying_A_Linux_Laptop
+
+
+{ 341 comments… read them below or add_one }
+  1 VonSkippy June 27, 2009 at 5:10 am
+      Pretty much common knowledge (or should be) but handy to have listed all
+      in one place.
+      Reply
+        2 Jim (JR) March 21, 2011 at 3:30 am
+            (quote)
+            Pretty much common knowledge. . . .
+            (/quote)
+            Yea, right!
+            I’ve been around the block two or three times – and a number of
+            these are familiar to me – but some of the ways they’re used here
+            were not. Also a fair number of these were absolutely brand-new –
+            and they look damned useful!
+            I am so going to book-mark this page it isn’t funny! It’s likely
+            that I will want to spread this URL around like the Flu as well. .
+            . . :-D
+            @Vivek
+            *GREAT* list – for those of us who are mere mortals. . . .
+            Jim (JR)
+            Reply
+        3 Steve August 3, 2011 at 7:28 am
+            For someone with the common knowledge, why would this be handy? I
+            mean, if you already know/use these, then why would you need a page
+            detailing them?
+            Reply
+              4 Mike Williams August 15, 2011 at 10:35 pm
+                  Because a lot of us have to live with faulty memory modules,
+                  Steve.
+                  I do agree with you too.:This knowledge isn’t that common
+                  outside the comic book fraternity.
+                  Reply
+              5 farseas January 8, 2013 at 5:29 pm
+                  If you did a lot of sysadmin you would already know the
+                  answer to that question.
+                  Reply
+  6 robb June 27, 2009 at 8:29 am
+      yeap most of them are must-have tools.
+      good job of collecting them in a post.
+      Reply
+  7 Chris June 27, 2009 at 8:37 am
+      Nice list. For systems with just a few nodes I recommend Munin. It’s easy
+      to install and configure. My favorite tool for monitoring a linux cluster
+      is Ganglia.
+      P.S. I think you should change this “#2: vmstat – Network traffic
+      statistics by TCP connection …”
+      Reply
+  8 ftaurino June 27, 2009 at 9:09 am
+      another useful tool is dstat , which combines vmstat, iostat, ifstat,
+      netstat information and more. but this is a very useful list with some
+      interesting examples!
+      Reply
+  9 James June 27, 2009 at 9:23 am
+      pocess or process. haha, i love typos
+      Reply
+        10 Sohrab Khan March 15, 2011 at 9:09 am
+            Dear i am learning the Linux pl z help me, I you have any useful
+            notes pl z sent it to my E-mail.
+            Thanks
+            Reply
+              11 vasu March 21, 2011 at 5:43 am
+                  In my system booting time it showing error fsck is fails. plz
+                  login as root…….– how to repair or check linux os using fsck
+                  command plz help me
+                  Reply
+                    12 darkdragn May 31, 2011 at 7:14 am
+                        Most of the time that happens if the fsck operation
+                        requires human interaction, which the boot fsck doesn’t
+                        have. Just restart it, if you don’t normally get a grub
+                        delay the hold down the shift key to get one, if you do
+                        then just select recovery mode, or single user mode, it
+                        depends on your distro. It’s the same thing in all,
+                        just tripping single user mode with a kernel arg, but
+                        it will let you boot, and run fsck on unmounted
+                        partitions. If it is your root partition, you may need
+                        to boot from an external medium, unless you have a kick
+                        ass initrd, lol.
+                        Reply
+  13 Artur June 27, 2009 at 9:40 am
+      What about Munin ? Lots easier and lighter than Cacti.
+      Reply
+        14 nig belamp December 7, 2010 at 4:21 pm
+            How can you even compare munin to cacti…stfu your a tool.
+            Reply
+              15 PC4N6 April 20, 2011 at 7:53 pm
+                  Uhm, geez, this isn’t blogspot. Head over there if you have
+                  an uncontrollable need to flame people above your level of
+                  understanding…
+                  Reply
+              16 RB-211 May 13, 2011 at 12:57 pm
+                  Wow, that was a bit harsh.
+                  Reply
+              17 grammer nazi July 24, 2011 at 1:54 pm
+                  it is you’re – you are a tool. Please when randomly slamming
+                  someones post to feel better about yourself, at least you
+                  proper grammer. Then at least you sound like an intelligent
+                  a55h0le. :P
+                  Reply
+                    18 Jeff August 9, 2011 at 6:07 pm
+                        Sarcastic pro’s, N00bs, flaming, harsh language,
+                        grammar nazis. All we need now is a Hitler comparison
+                        and we have the full set. Who’s up for a ban?
+                        Also: before stuff can become common knowledge you’ll
+                        first have to encounter it at least once. Like here in
+                        this nice list. Thanks for sharing!
+                        Reply
+                          19 David August 25, 2011 at 3:05 pm
+                              A ban? Censorship! You Nazi!
+                              Reply
+                    20 Roberto September 9, 2011 at 6:08 pm
+                        That’s “grammar”, unless you’re talking about the actor
+                        who plays Frasier on Cheers. :P
+                        Reply
+                    21 Fireman October 17, 2011 at 11:39 pm
+                        Let me go ahead and re-write your comment, grammer
+                        nazi. It seems you have quite a few errors.
+                        “It is ‘you’re–you are’ a tool. Please, when randomly
+                        slamming someone’s post to feel better about yourself,
+                        at least use proper grammar. Then, at least, you sound
+                        like an intelligent a55h0le.”
+                        In the future, I would recommend proof-reading your own
+                        posts before you arrogantly correct others. I counted
+                        at least six mistakes in your “correction.” Have a nice
+                        day! :)
+                        Reply
+                          22 flame on! December 4, 2011 at 8:05 pm
+                              Vivek does a great job, as usual. But, thanks for
+                              the laughs, guys!
+                              Reply
+  23 Raj June 27, 2009 at 10:13 am
+      Nice list, worth bookmarking!
+      Reply
+  24 kaosmonk June 27, 2009 at 10:53 am
+      Once again, great article!!
+      Reply
+  25 Amr El-Sharnoby June 27, 2009 at 11:07 am
+      I can see that the best tool to monitor processes , CPU, memeory and disk
+      bottleneck at once is atop …
+      But the tool itself can cause a lot of trouble in heavily loaded servers
+      and it enables process accounting and has a service running all the time
+      …
+      To use it efficiently on RHEL , CentOS;
+      1- install rpmforge repo
+      2- # yum install atop
+      3- # killalll atop
+      4- # chkconfig atop off
+      5- # rm -rf /tmp/atop.d/ /var/log/atop/
+      6- then don’t directly run “atop” command , but instead run it as
+      follows;
+      # ATOPACCT=” atop
+      This tool has saved me hundreds of hours really! and helped me to
+      diagnose bottlenecks and solve them that couldn’t otherwise be easily
+      detected and would need many different tools
+      Reply
+  26 nixCraft June 27, 2009 at 1:01 pm
+      @Chris / James
+      Thanks for the heads-up!
+      Reply
+  27 Solaris June 27, 2009 at 1:26 pm
+      Great post, also great reference.
+      Reply
+  28 quba June 27, 2009 at 1:46 pm
+      Hi,
+      We have just added your latest post “20 Linux System Monitoring Tools
+      Every SysAdmin Should Know” to our Directory_of_Technology . You
+      can check the inclusion of the post here . We are delighted
+      to invite you to submit all your future posts to the directory and get a
+      huge base of
+      visitors to your website.
+      Warm Regards
+      Techtrove.info Team
+      http://www.techtrove.info
+      Reply
+  29 Cristiano June 27, 2009 at 1:57 pm
+      You probably wanna add IFTOP tool, its really simple and light, very
+      useful when u need to have a last moment remote access to a server to see
+      hows the trific going.
+      Reply
+  30 Peko June 27, 2009 at 3:40 pm
+      Yeah, well why a so good admin (I dig(g) your site) won’t you use
+      spelling checkers?
+      Typo #2 Web-based __Monitioring__ Tool
+      Reply
+  31 paul tergeist June 27, 2009 at 4:17 pm
+      maybe it’s a typo too, but the title should be :
+      “.. Tools Every SysAdmin MUST Know”
+      and still, this is advanced user knowledge, at most. I would not trust a
+      sysadmin that knows so few. And..
+      Reply
+  32 harrywwc June 27, 2009 at 10:56 pm
+      Hi guys,
+      good list – and some great submitted pointers to other useful tools.
+      to those carp-ing on about typo’s – give us all a break. you’ve never
+      made a typo? ever?
+      Idea: How ’bout those who have never *ever* made an error in typing text
+      be the first one(s) to give people grief about making a typo?
+      I _used_ to be a real PITA about this; then I grew up.
+      The purpose of this blog, and other forms of communication, is to
+      *communicate* concepts and ideas. *If* you have received those clearly –
+      in spite of the typos – then the purpose has been fulfilled.
+      /me gets down off his soapbox
+      .h
+      Reply
+        33 StygianAgenda February 28, 2011 at 8:49 pm
+            I totally second that!
+            WTF is up with people making such a big deal about spelling? I
+            could understand if the complaints were in regards to a misspelling
+            of a code-example, but if the language is coherent enough to get
+            the idea across, then that’s all that really matters.
+            Reply
+        34 Lolcatz April 7, 2011 at 10:54 pm
+            Typos*
+            Reply
+              35 roflcopter June 24, 2011 at 1:57 pm
+                  Typographical error*
+                  Reply
+  36 PÃ¡draig Brady June 27, 2009 at 11:37 pm
+      A script I use often to show the real memory usage of programs on linux,
+      is ps_mem.py
+      I also summarised a few linux monitoring tools here
+      I’d also mention the powertop utility
+      Reply
+  37 Saad June 27, 2009 at 11:54 pm
+      This blog is more impressive and more useful than ever. I need more help
+      regarding proper installation document on “php-network weathermap” on
+      Cacti as plugins
+      Reply
+  38 Jack June 28, 2009 at 2:18 am
+      No love for whowatch ? Real time info on who’s logged in, how their
+      connected (SSH, TTY, etc) and what process thay have running.
+      http://www.pttk.ae.krakow.pl/~mike/#whowatch
+      Reply
+        39 StygianAgenda February 28, 2011 at 9:50 pm
+            I just became an instant fan of ‘whowatch’. Thanks!!! ;)
+            Reply
+  40 Ponzu June 28, 2009 at 2:28 am
+      vi — tool used to examine and modify almost any configuration file.
+      Reply
+        41 Manoj April 27, 2011 at 9:28 am
+            It is not a tool. It is an Editor
+            Reply
+              42 su - July 28, 2011 at 9:30 pm
+                  An editor is a tool for text documents.
+                  Reply
+  43 Eric schulman June 28, 2009 at 5:38 am
+      dtrace is a notable mention for the picky hackers that wish to know more
+      about the behavior of the operating system and it’s programs internals.
+      Reply
+  44 Ashok kumar June 28, 2009 at 5:48 am
+      hi gud information , keep it up
+      ash
+      Reply
+  45 Enzo June 28, 2009 at 6:09 am
+      You missed: iftop &amp; nethogs
+      Reply
+  46 Adrian Fita June 28, 2009 at 7:09 am
+      Excellent list. Like Amr El-Sharnoby above, I also find atop
+      indispensable and think it must be installed on every system.
+      In addition I would like to add iotop to monitor disk usage per process
+      and jnettop to very easily monitor bandwidth allocation between
+      connections on a Linux system.
+      Reply
+  47 Knightsream June 28, 2009 at 8:53 am
+      Well, the one i use right now is Pandora FMS 3.0 and its making my work
+      easy.
+      Reply
+  48 praveen k June 28, 2009 at 12:56 pm
+      I would like to add
+      whoami ,who am i, finger, pinky , id commands
+      Reply
+  49 create own website June 28, 2009 at 3:32 pm
+      i always love linux, great article
+      Reply
+  50 Mathieu Desnoyers June 28, 2009 at 9:14 pm
+      One tool which seems to be missing from this list is LTTng. It is a
+      system-wide tracing tool which helps understanding complex performance
+      problems in multithreaded, multiprocess applications involving many
+      userspace-kernel interactions.
+      The project is available at http://www.lttng.org. Recent SuSE
+      distributions, WindRiver, Monta Vista and STLinux offer the tracer as
+      distribution packages. The standard way to use it is to install a patched
+      kernel though. It comes with a trace analyzer, LTTV, which provides nice
+      view of the overall system behavior.
+      Mathieu
+      Reply
+  51 Andy Leo June 29, 2009 at 1:02 am
+      Very useful, well done. Thanks!
+      Reply
+  52 Aveek Sen June 29, 2009 at 1:29 am
+      Very informative.
+      Reply
+  53 The Hulk June 29, 2009 at 2:11 am
+      I love this website.
+      Reply
+  54 kburger June 29, 2009 at 3:08 am
+      If we’re talking about a web server, apachetop is a nice tool to see
+      Apache’s activity.
+      Reply
+  55 Ram June 29, 2009 at 4:07 am
+      Dude you forgot the most important of ALL!
+      net-snmpd
+      With it you can collect vast amounts of information. Then with snmpwalk
+      and scripts you can create your own web NMS to collect simple information
+      like ping, disk space, services down.
+      Reply
+  56 Kartik Mistry June 29, 2009 at 5:15 am
+      `iotop` is nice one to be include in list. I used `vnstat` very much for
+      keeping track of my download when I was on limited connection :)
+      Reply
+  57 nixCraft June 29, 2009 at 7:03 am
+      @Everyone
+      Thanks for sharing all your tools with us.
+      Reply
+  58 feilong June 29, 2009 at 10:01 am
+      Very useful, thinks for sharing.
+      Take a look to a great tools called nmon. I use it on AIX IBM system but
+      works now on all GNU/linux system now.
+      Reply
+  59 boz June 29, 2009 at 10:21 am
+      mtr
+      Reply
+  60 Scyldinga June 29, 2009 at 10:21 am
+      I’m with @paul tergeist, tools every linux user should know. The ps
+      samples are nice, thanks.
+      No reference to configuration management tools ?
+      cfengine/puppet/chef?
+      Reply
+  61 Ken McDonell June 29, 2009 at 9:19 pm
+      Nice summary article.
+      If your “system” is large and/or distributed, and the performance issues
+      you’re tackling are complex, you may wish to explore Performance Co-Pilot
+      (PCP). It unifies all of the performance data from the tools you’ve
+      mentioned (and more), can be extended to include new applications and
+      service layers, works across the network and for clusters and provides
+      both real-time and retrospective analysis.
+      See http://www.oss.sgi.com/projects/pcp
+      PCP is included in the Debian-based and SUSE distributions and is likely
+      to appear in the RH distributions in the future.
+      As a bonus, PCP also works for monitoring non-Linux platforms (Windows
+      and some of the Unix derivatives).
+      Reply
+  62 Lance June 30, 2009 at 2:37 am
+      I love your collection.
+      I use about 25% of those regularly, and another 25% semi-regularly. I’ll
+      have to add another 25% of those to my list of regulars.
+      Thanks for compiling this list.
+      Reply
+  63 bogo June 30, 2009 at 6:01 am
+      Very nice collection of linux applications. I work with linux but I can’t
+      say that i know them all.
+      Reply
+  64 MEHTA GHANSHYAM June 30, 2009 at 9:28 am
+      REALLY ITS VERY GOOD N USEFULL FOR ALL ADMIN.
+      THANKS ONCE AGAIN
+      Reply
+  65 fasil June 30, 2009 at 12:06 pm
+      Good post…already bookmarked… cheers
+      Reply
+  66 Aleksey Tsalolikhin June 30, 2009 at 7:30 pm
+      I’ll just mention “ngrep” – network grep.
+      Great list, thanks!!
+      Aleksey
+      Reply
+  67 Abdul Kayyum July 1, 2009 at 3:40 pm
+      Thanks for sharing this information..
+      Reply
+  68 Aurelio July 1, 2009 at 8:20 pm
+      feilong, I agree. I use nmon on my linux boxes from years. It’s worth a
+      look.
+      Reply
+  69 komradebob July 1, 2009 at 10:36 pm
+      Great article, many great suggestions.
+      Was surprised not to see these among the suggestions:
+      bmon – graphs/tracks network activity/bandwidth real time.
+      etherape – great visual indicator of what traffic is going where on the
+      network
+      wireshark – tcpdump on steroids.
+      multitail – tail multiple files in a single terminal window
+      swatch – track your log files and fire off alerts
+      Reply
+  70 pradeep July 2, 2009 at 11:14 am
+      how the hell i missed this site this many days… :P thank god i found it…
+      :) i love it…
+      Reply
+  71 Jay July 4, 2009 at 5:23 pm
+      O personally much prefer htop to top. Displays everything very nicely.
+      phpsysinfo is another nice light web-based monitoring tool. Very easy to
+      setup and use.
+      Reply
+  72 Manuel Fraga July 5, 2009 at 4:55 pm
+      Osmius: The Open Source Monitoring Tool is C++ and Java. Monitor
+      “everything” connected to a network with incredible performance. Create
+      and integrate Business Services, SLAs and ITIL processes such as
+      availability management and capacity planning.
+      Reply
+  73 aR July 6, 2009 at 4:17 pm
+      thanks for sharing all the helpful tools.
+      Reply
+  74 Shailesh Mishra July 7, 2009 at 7:13 pm
+      Nice compilation. As usual, always very useful.
+      It would be nice if some of you knowledgeable guys can shed some light on
+      java heap monitoring thing, thread lock detection and analysis, heap
+      analysis etc.
+      Reply
+  75 Bjarne Rasmussen July 7, 2009 at 8:00 pm
+      nmon is a nice tool… try google for it, it rocks
+      Reply
+  76 Balaji July 12, 2009 at 5:50 pm
+      Very much Useful Information’s,
+      trafmon is one more useful tool
+      Reply
+  77 Stefan July 15, 2009 at 8:18 pm
+      And for those which like lightweight and concise graphical metering:
+      xosview +disk -ints -bat
+      Reply
+  78 Raja July 19, 2009 at 3:03 am
+      Awesome. Especially love the ps tips. Very interesting
+      Reply
+  79 Rajat July 24, 2009 at 4:04 am
+      Thanks very good info!!!
+      Reply
+  80 nima0102 July 27, 2009 at 7:39 am
+      It’s really nice :)
+      Reply
+  81 David Thomas August 12, 2009 at 9:49 am
+      Excellent list!
+      Reply
+  82 Vinidog August 29, 2009 at 4:53 am
+      Nice… very nice guy!!!! ;-)
+      Reply
+  83 Bob Marcan September 4, 2009 at 11:00 am
+      From the guy who wrote the collect utility for Tru64:
+      Name : collectl Relocations: (not relocatable)
+      Version : 3.3.5 Vendor: Fedora Project
+      Release : 1.fc10 Build Date: Fri Aug 21 13:22:42 2009
+      Install Date: Tue Sep 1 18:10:34 2009 Build Host: x86-
+      5.fedora.phx.redhat.com
+      Group : Applications/System Source RPM: collectl-3.3.5-1.fc10.src.rpm
+      Size : 1138212 License: GPLv2+ or Artistic
+      Signature : DSA/SHA1, Mon Aug 31 14:42:40 2009, Key ID bf226fcc4ebfc273
+      Packager : Fedora Project
+      URL : http://collectl.sourceforge.net
+      Summary : A utility to collect various linux performance data
+      Description :
+      A utility to collect linux performance data
+      Best regards, Bob
+      Reply
+  84 Tman September 5, 2009 at 8:48 pm
+      For professional network monitoring use Zenoss:
+      Zenoss Core (open source): http://www.zenoss.com/product/network-
+      monitoring
+      Reply
+  85 Somnath Pal September 14, 2009 at 9:02 am
+      Hi,
+      Thanks for the nice collection with useful samples. Consider adding tools
+      to monitor SAN storage, multipath etc. also.
+      Best Regards,
+      Somnath
+      Reply
+  86 Eddy September 17, 2009 at 8:41 am
+      I did not see ifconfig or iwconfig on the list
+      Reply
+  87 Kestev September 17, 2009 at 1:57 pm
+      openNMS
+      Reply
+  88 Sergiy September 25, 2009 at 12:39 pm
+      Thanks for the article. I am not admin myself, but tools are very useful
+      for me too.
+      Thanks for the comments also :)
+      Reply
+  89 Mark Seger September 28, 2009 at 6:02 pm
+      When I wrote collectl my goal was to replace as many utilities as
+      possible for several reasons including:
+      - not all write to log files
+      - different output formats make correlation VERY difficult
+      - sar is close but still too many things it doesn’t collect
+      - I wanted option to generate data that can be easily plotted or loaded
+      into spreadsheet
+      - I wanted sub-second monitoring
+      - I want an API and I want to be able to send data over sockets to other
+      tools
+      - and a whole lot more
+      I think I succeeded on many fronts, in particular not having to worry if
+      the right data is being collected. Just install rpm and type “/etc/
+      init.d/collectl start” and you’re collecting everything such as slabs and
+      processes every 60 seconds and everything else every 10 seconds AND using
+      <0.1% of the CPU to do so. I personally believe if you're collecting
+      performance counters at a minute or coarser you're not really seeing what
+      your system is doing.
+      As for the API, I worked with some folks at PNNL to monitor their 2300
+      node cluster, pass the data to ganglia and from there they pass it to
+      their own real-time plotting tool that can display counters for the
+      entire cluster in 3D. They also collectl counters from individual CPUs
+      and pass that data to collectl as well.
+      I put together a very simple mapping of 'standard' utilities like sar to
+      the equivilent collectl commands just to get a feel for how they compare.
+      But also keep in mind there are a lot of things collectl does for which
+      there is no equivalent system command, such as Infiniband or Lustre
+      monitoring. How about buddyinfo? And more…
+      http://collectl.sourceforge.net/Matrix.html
+      -mark
+      Reply
+  90 PeteG September 29, 2009 at 5:33 am
+      Darn,
+      I’ve been using Linux since Windows 98 was the current MicroSnot FOPA.
+      I know all this stuff. I do not make typoous.
+      Why do you post this stuff?
+      We all know it.
+      Sure we do!
+      But do we remember it? I just read through it and found stuff that I used
+      long ago and it was like I just learned it. I found stuff I didn’t know
+      either.
+      Hummmm…… Imagine that!
+      Thanks, particularly for the PDF.
+      Saved me making one.
+      Hey, where’s the HTML to PDF howto?
+      Thanks again.
+      Reply
+  91 Denilson October 26, 2009 at 11:55 pm
+      Use:
+      free -m
+      To show memory usage in megabytes, which is much more useful.
+      Reply
+  92 AndrewW November 5, 2009 at 11:48 pm
+      Is it possible to display hard drive temps from hddtemp in KSysGuard?
+      They are available in Ksensors and GKrellM, without any configuration
+      required. However I prefer the interface and flexibility of KSysGuard. Is
+      there a way of configuring it?
+      Andrew
+      Reply
+  93 Abhijit November 10, 2009 at 1:46 pm
+      Zabbix open source monitoring tool
+      http://www.zabbix.com
+      Reply
+        94 greg January 6, 2012 at 6:27 pm
+            Zabbix is a great tool that it doesn’t require a entirely separate
+            project to make it easy to install and use (like Nagios and FAN).
+            I’ve been following it since its early days and its come a long
+            way. Its sad that lists like this never give it its due, not even a
+            foot note mention.
+            while on that note.. really? your 17-20 makes the list, but nmap,
+            mtr, and lsof get relegated to foot notes?
+            Reply
+  95 Kevin November 15, 2009 at 10:55 pm
+      Thanks, good work
+      Reply
+  96 Stefano November 22, 2009 at 4:09 pm
+      Just thanks! :)
+      Reply
+  97 GBonev November 25, 2009 at 2:13 pm
+      Good Job on assembling the list
+      If I may suggest trafshow as an alternative to iptraf when you need to
+      see more detailed info on source/destination , proto and ports at once.
+      Reply
+  98 Gokul December 7, 2009 at 4:43 am
+      How to install the Kickstart method in linux
+      Reply
+  99 Bilal Ahmad December 8, 2009 at 4:01 pm
+      Very nice collection.. Worth a bookmark…Bravo…
+      Reply
+  100 Jalal Hajigholamali December 9, 2009 at 5:07 am
+      Thanks a lot…
+      Reply
+  101 mancai December 11, 2009 at 6:40 pm
+      nice sharing, this is what i want looking for few day ago… tq
+      Reply
+  102 aruinanjan December 14, 2009 at 7:41 am
+      This is a nice document for new user, thaks to owner of this document.
+      arun
+      Reply
+  103 myghty December 16, 2009 at 7:57 am
+      Great post!! Thanks.
+      Reply
+  104 Rakib Hasan December 16, 2009 at 2:09 pm
+      Very helpful. Thanks a lot!
+      Reply
+  105 PRR December 22, 2009 at 9:25 pm
+      After so many thanks. Add one more……..
+      thank you. It’s very handy.
+      Reply
+  106 Yusuf December 25, 2009 at 7:35 pm
+      Mark,
+      I am in technology myself and this tutorial page is very well organized
+      Thanks for taking the time to create this awesome page
+      great help for Linux new bees like myself.
+      Reply
+  107 Yusuf December 25, 2009 at 7:40 pm
+      I meant to thank Vivek Gita
+      once again awesome job
+      Reply
+  108 Shrik December 31, 2009 at 9:58 am
+      Thank you very much VERY GOOD WEBSITE
+      Reply
+  109 sekar January 1, 2010 at 4:16 pm
+      it is cool
+      Reply
+  110 Giriraaj January 5, 2010 at 7:38 am
+      Thanks for sharing most resourceful information.
+      Reply
+  111 Bhagyesh Dhamecha January 6, 2010 at 11:58 am
+      Dear all Members,
+      Thanks for sharing all your knowledge about Linux.. i really thankful for
+      your share linux tips..!!
+      thanks and continue this jurny…as well
+      thank you..
+      Reply
+  112 Ganesan AS January 10, 2010 at 1:53 pm
+      Good info. Thanks for sharing.
+      May GOD bless you to do more.
+      Reply
+  113 Mark Seger January 10, 2010 at 2:38 pm
+      This is indeed an impressive collection of tools but I still have to ask
+      if people are really happy with having to know so many names, so many
+      switches and so many formats. If you run one command and see something
+      weird doesn’t it bother you if you have to run a different tool but the
+      anomaly already passed and you can no longer see it with a different
+      tool? For example if you see a drop in network performance and wonder if
+      there was a memory or cpu problem, it’s too late to go back and see what
+      else was going on. I know it bothers me. Again, by running collectl I
+      never have to worry about that because it collects everything (when run
+      as a deamon) or you can just tell it to report lots of things when
+      running interactively and by default is shows cpu, disk and network. If
+      you want to add memory, you can always include it but you will need a
+      wider screen to see the output.
+      As a curiosity for those who run sar – I never do – what do you use for a
+      monitoring interval? The default is to take 10 minute samples which I
+      find quite worthless – remember sar has been around forever dating back
+      to when cpus were much slower and monitoring much more expensive. I’d
+      recommend to run sar with a 10 second sampling level like collectl and
+      you’ll get far more out of it. The number of situations which this would
+      be too much of a load on your system would be extremely rare. Anyone care
+      to comment?
+      -mark
+      Reply
+  114 miles January 12, 2010 at 4:58 am
+      Amr El-Sharnoby:
+      atop is awesome, thanks for the tip.
+      Reply
+  115 Serg January 12, 2010 at 6:09 am
+      hi Mark
+      absolutely agreed with you mate! if you are the sysadmin something – you
+      will do it for yourself and do it right!
+      These tools like ps,top and other is commonly used by users who
+      administrated a non-productive or desktop systems or for some users who’s
+      temporary came to the system and who needed to get a little bit of
+      information about the box – and its pretty good enough for them. )
+      Reply
+  116 met00 January 12, 2010 at 6:15 pm
+      If you are running a web server and you have multiple clients writing
+      code, you will one day see CPU slow to a crawl. “Why?”, you will ask. ps
+      -ef and top will show that mysql is eating up resources…
+      HMM?
+      If only there was a tool which showed me what command was being issued
+      against the database…
+      mytop
+      Once you find the select statement that has mysql running at 99% of the
+      CPU, you can kill the query and then go chase down the client and kill
+      them too (or in my case bill them at $250/hr for fixing their code).
+      Reply
+  117 Mark Seger January 12, 2010 at 6:36 pm
+      re mysql – it’s not necessarily that straight forward. I was working with
+      someone who had a system with mysql that was crawling. it was taking
+      multiple seconds for vi to echo a single character! we ran collectl on it
+      and could see low cpu, low network and low disk i/o. Lots of available
+      memory, so what gives? A close look showed me that even those the I/
+      O rates were low, the average request sizes were also real low – probably
+      do so small db requests.
+      digging even deeper with collectl I saw the i/o request service times
+      were multiple seconds! in other words when you requested an I/O operation
+      not matter how fast the disk is, it took over 2 second to complete and
+      that’s why vi was so slow, it was trying to write to it’s backing store.
+      bottom line – running a single tool and only looking at one thing does
+      not tell the whole story. you need to see multiple things AND see them at
+      the same time.
+      -mark
+      Reply
+  118 mtituh Alu January 19, 2010 at 2:09 pm
+      I have a postfix mail server, recently through tcpdump I see alot of
+      traffic to dc.mx.aol.com, fedExservices.com, wi.rr.com, mx1.dixie-
+      net.com. I believe my mail server is spamming. How do I find out it is
+      spamming? and how do I stop it. Please help.
+      Reply
+        119 nixCraft January 19, 2010 at 3:01 pm
+            Only allow authenticated email users to send an email. There are
+            other things too such as anti-spam, ssl keys, domain keys and much
+            more.
+            Reply
+  120 kirankumarl February 3, 2010 at 9:26 am
+      Dear sir pls send me some linex pdf file by wich i can learn how to
+      install &amp; maintanes
+      Reply
+  121 Visigoth February 21, 2010 at 3:11 pm
+      I like the saidar tool, and iptstate. Check them out.
+      Reply
+  122 JK February 23, 2010 at 12:43 pm
+      Hiii vivek,
+      Do you know any application to shut down a ubuntu 9.1 machine when one of
+      its network interface is down..I need it for clustering..
+      Reply
+  123 AD February 25, 2010 at 6:23 am
+      Thank you very much,,,….
+      This information is very useful for me to monitoring my server…
+      Reply
+  124 Tarek February 26, 2010 at 7:18 pm
+      Actually where I work we have and isa server acting as a proxy/firewall,
+      which prevent me from monitoring internet traffic consumption. so i
+      installed debian as a network bridge between the isa server and the lan,
+      and equipped it with various monitoring tools (bandwidthd, ntop, vnstat,
+      iftop, iptraf, darkstat).
+      Reply
+  125 deepu March 2, 2010 at 7:31 am
+      it is a very good and resourceful infomation.
+      Reply
+  126 Solo March 7, 2010 at 11:40 pm
+      OMG !
+      Amazing – Super – Ultra nice info . THX pinguins !
+      Reply
+  127 vijay March 12, 2010 at 7:30 am
+      its so usefulllll thanks a lot
+      Reply
+  128 Venu Yadav March 23, 2010 at 5:05 am
+      Good information. Thanks
+      Reply
+  129 Prashant Redkar March 25, 2010 at 7:10 am
+      Thank you it is very helpful
+      Reply
+  130 Saorabh Kumar March 25, 2010 at 12:12 pm
+      Good knowledge base, great post
+      Reply
+  131 Spyros March 30, 2010 at 2:52 am
+      Very interesting read that really includes the tools that every admin
+      should know about.
+      Reply
+  132 amitabh mishra March 30, 2010 at 9:47 am
+      Hi
+      Its a great topic. Actually i am a Mysql DBA and i fond a lot of new
+      things here.
+      So i can say it will help in future.
+      Thanks once again
+      Reply
+  133 Chinmaya April 2, 2010 at 4:48 am
+      Excellent one !!!
+      Reply
+  134 saurav April 3, 2010 at 6:43 pm
+      wow this is some great info,also the various inputs in comments. One i
+      would like to add is
+      ulimit
+      User limits – limit the use of system-wide resources.
+      Syntax
+      ulimit [-acdfHlmnpsStuv] [limit]
+      Options
+      -S Change and report the soft limit associated with a resource.
+      -H Change and report the hard limit associated with a resource.
+      -a All current limits are reported.
+      -c The maximum size of core files created.
+      -d The maximum size of a process’s data segment.
+      -f The maximum size of files created by the shell(default option)
+      -l The maximum size that may be locked into memory.
+      -m The maximum resident set size.
+      -n The maximum number of open file descriptors.
+      -p The pipe buffer size.
+      -s The maximum stack size.
+      -t The maximum amount of cpu time in seconds.
+      -u The maximum number of processes available to a single user.
+      -v The maximum amount of virtual memory available to the process.
+      ulimit provides control over the resources available to the shell and to
+      processes started by it, on systems that allow such control.
+      Reply
+  135 Mustafa Ashraf Rahman April 20, 2010 at 1:44 pm
+      hello Vivek Gite,
+      This is really a very good post and useful for all admin.
+      Thanks,
+      Ashraf
+      Reply
+  136 arief April 21, 2010 at 3:23 pm
+      Great tips..
+      Thanks
+      Reply
+  137 Eduardo Cereto April 25, 2010 at 5:20 am
+      I think you missed my top 2 monitoring tools:
+      monit: http://mmonit.com/monit/
+      mrtg : http://oss.oetiker.ch/mrtg/
+      Reply
+  138 Lava Kafle April 29, 2010 at 9:05 am
+      Perfect examples : thanks
+      Reply
+  139 wolfc01 May 2, 2010 at 3:32 pm
+      See also the “Linux Process Explorer” (in development) meant to be an
+      equivalent the windows process explorer of Mark Russinovich.
+      See http://sourceforge.net/projects/procexp
+      Reply
+  140 ohwell May 2, 2010 at 6:33 pm
+      if an “admin” doesnt know 90% of those tools, he isn’t a real admin. you
+      will find most of these tools explained in any basic linux howto…
+      Reply
+  141 ravi May 3, 2010 at 1:05 pm
+      how the systems can be seen from sitting on one computer like as admin.
+      what is going on screen in grd floor computers?
+      Reply
+  142 Anonymous May 7, 2010 at 7:17 pm
+      but how to kill process ID in my server..
+      Reply
+        143 FHJ May 11, 2010 at 2:32 pm
+            I assume you can find the process ID – for example if your process
+            is called foo.bar, you could do
+            ps -ef | grep foo.bar
+            this will give the PID (process ID) as well as other information.
+            Then do
+            kill -9 PID (where PID is the number your found in the above).
+            If you are working on a Mac you have to do ‘sudo kill -9 PID’ since
+            the kill command is an “admin” action that it wants you to be sure
+            about.
+            Or if you use top, and you can see the process you want to kill in
+            your list, you can just type k and you will be prompted for the PID
+            (the screen will freeze so it’s easy to read). You type the number
+            and “enter”, will have to confirm (y), and the process is killed
+            with -15. Which is less “severe” than a “kill -9″ which really
+            kills just about any process (without allowing it a graceful exit
+            of any kind).
+            Use with care!
+            Reply
+  144 someone May 10, 2010 at 5:59 pm
+      Gnome system monitor is a pretty useless utility if you ask me.
+      its neat to have it as an applet, but thats it.
+      Reply
+  145 kalyan de May 14, 2010 at 2:18 am
+      Thanks,
+      I think it will be very helpfull for me as i am practicng oracle in
+      redhat linux4. Today i will try to check it. I want 1 more help. I am not
+      clear about crontab. saupposed i want to start a crontab in my system
+      with any script which i have kept in /home/oracle and want to execute in
+      every 1 hour. Can u send me how i can do with details.
+      Thanks,
+      kalyan de.
+      Chennai, india
+      +91 9962300520
+      Reply
+  146 Samuel Egwoyi May 14, 2010 at 9:29 am
+      how can i practice Mysql using linux
+      Reply
+  147 Basil May 21, 2010 at 8:49 pm
+      This article simply rocks
+      Reply
+  148 Fenster June 1, 2010 at 10:24 am
+      hey, thanks, just installed htop and iptraf, very nice tools!!
+      Reply
+  149 zim June 2, 2010 at 1:12 pm
+      atop
+      man atop shows
+      “The program atop is an interactive monitor to view the load on a Linux
+      system. It shows the occupation of the most critical hardware resources
+      (from a performance point of view) on system level, i.e. cpu, memory,
+      disk and network.It also shows which processes are responsible for the
+      indicated load with respect to cpu- and memory load on process level;
+      disk- and network load is only shown per process if a kernel patch has
+      been installed.”
+      Reply
+        150 Boggles September 21, 2011 at 1:52 am
+            Have to agree with zim. Atop is a great tool along with it’s report
+            generating sister application atopsar. This is a must-have on any
+            server I manage.
+            Reply
+  151 Amit June 2, 2010 at 1:26 pm
+      Hello,
+      How to install a Suphp on cpanel.
+      Reply
+  152 Walker June 4, 2010 at 4:19 am
+      Thanks :)
+      THIS helped me a lot.
+      Reply
+  153 m6mb3rtx June 4, 2010 at 4:34 pm
+      Great article, very userfull tools!
+      Reply
+  154 dudhead June 5, 2010 at 2:38 pm
+      Great list! Missed df command in the list.
+      Reply
+  155 giftzy June 5, 2010 at 6:26 pm
+      I become to love linux after 10 years of hp-ux
+      Reply
+  156 Rafael Quirino de Castro June 7, 2010 at 5:08 pm
+      I´m lookuing for apache parameter on the web and found here.
+      So, my contribute is: try to use iftop, iptraf, ifstat, jnettop and
+      ethstatus for network graphical and CLI monitoring.
+      Use tcmpdump and ngrep for packet sniffing
+      HTB is very good for QoS in the network, especially if you need to reduce
+      slower VPN network
+      Reply
+  157 georges June 9, 2010 at 3:39 pm
+      fuser command is missing from this list. it tells you which command is
+      using a file at the moment. Since in Linux everything is a file, it is
+      very useful to know!
+      Use it this way:
+      # to know which process listens on tcp port 80:
+      fuser 80/tcp
+      # to know which process uses the /dev/sdb1 filesystem:
+      fuser -vm /dev/sdb1
+      etc …
+      Reply
+  158 Naga June 13, 2010 at 7:19 am
+      Is there any good tools for analyzing Apache/Tomcat instances.
+      Reply
+  159 Jan 'luckyduck' Brinkmann June 15, 2010 at 11:02 am
+      ‘ethtool’ can also be very useful, depending on the situation:
+      - searching for network problems
+      - checking link status of ethernet connections
+      - and so on
+      Reply
+  160 Abdullah June 16, 2010 at 7:15 am
+      nice list, at the end i think what you meant is “Bonus” and not “bounce”
+      “bounce” means “jump”
+      “bonus” means extra goodies :)
+      Reply
+  161 dust June 23, 2010 at 8:19 am
+      What is in Linux that is equal to cfgadm in Solaris?
+      Reply
+  162 Jerome Christopher July 6, 2010 at 7:55 pm
+      Thanks for the excellent list of commands, links and info.
+      Jerome.
+      Reply
+  163 sriharikanth July 12, 2010 at 1:49 pm
+      Thanks, very useful information provided.
+      Reply
+  164 Jyoti July 13, 2010 at 9:57 am
+      very useful
+      Reply
+  165 t.k. July 16, 2010 at 10:02 pm
+      Good compilation of commands. Thanks!
+      Reply
+  166 Thomas August 3, 2010 at 5:40 pm
+      If you want graphy easly your performance data, try BrainyPDM: an another
+      open source tool! http://www.brainypdm.org
+      Reply
+  167 Zanil Hyder August 4, 2010 at 5:44 am
+      Though i have come across most of these names, having them all in one
+      list will prove to be a good resource. I am going to make a list from
+      these and have it within my website which i use for reference.
+      Thanks for the examples.
+      Reply
+  168 brownman August 20, 2010 at 8:57 am
+      web-based gui : webmin wins them all
+      Reply
+  169 chandra August 28, 2010 at 7:39 am
+      Hi ite really very very nice which is helful to fresher.
+      Thanks a lot…………………..
+      Regards
+      Amuri Chandra
+      Reply
+  170 George August 30, 2010 at 3:53 pm
+      Great resource…Really helpful for a novice as well for an expert…
+      Reply
+  171 SHREESAI LUG September 4, 2010 at 5:36 am
+      hiiiiiiiiiiiii
+      we r SHREESAI LINUX USER GROUP FRM MUMBAI
+      THIS COMMANDS R REALLY NICE
+      THANKS
+      VIVEK SIR
+      PLZ REPLY US ON MAIL
+      Reply
+  172 Tunitorios September 12, 2010 at 2:31 am
+      Thanks for this great tips.
+      My question is how to show the username(s) wich are connected to the
+      server and they are using ftp protocole ?
+      Reply
+        173 Marcelo Cosentino April 7, 2011 at 12:38 pm
+            Try ftptop . I think you can find it in centos , red hat , slack,
+            debian etc…
+            Ftptop works with a lot of ftp servers daemons.
+            Reply
+  174 mark seger September 12, 2010 at 11:48 am
+      I don’t believe that ftp usage by user is recorded anywhere, so you’d
+      have to get inventive. The way I would do it is use collectl to show both
+      processes sorted by I/O and ftp stats. Then is simply becomes a matter of
+      see which processes are contributing to the I/O and who their owners are.
+      -mark
+      Reply
+        175 jan February 24, 2011 at 7:42 am
+            Usually ftp access are recorded in /var/log/messages file (at least
+            pure-ftpd)
+            Reply
+  176 sriram September 12, 2010 at 12:53 pm
+      Dumpcap is another command which is useful for capturing packets. Very
+      useful tool
+      Reply
+  177 Riadh Rezig September 12, 2010 at 1:12 pm
+      There is another tools “Incron” :
+      This program is an “inotify cron” system. It consists of a daemon and a
+      table manipulator. You can use it a similar way as the regular cron. The
+      difference is that the inotify cron handles filesystem events rather than
+      time periods.
+      Reply
+  178 eaman September 14, 2010 at 6:03 am
+      discus is a nice / light tool to have an idea of file system usage.
+      Reply
+  179 Amzath September 14, 2010 at 9:43 pm
+      Handy list.
+      Also, these might be handy as well…
+      lsdev – list of installed devices
+      lsmod – list of installed modules
+      ldd – to see dependencies of a executable file
+      watch – automated refresh of any code every specified seconds, etc
+      stat – details of any file
+      getconf – to get HP server details
+      runlevel – redhat run level
+      Search in web for more detailed info.
+      Good luck…
+      Reply
+  180 Rafiq September 20, 2010 at 11:45 am
+      Hi guys,
+      I m totally new to the linux &amp; this web aswell.
+      Would some1 help me here regarding, mirrordir utility?
+      what would b the full syntex if i only want to copy/mirror changed/edited
+      files from
+      source to destination. since last mirror.
+      And how to define specific time to run this command, i mean schedule.
+      Thanks in advance.
+      Reply
+  181 Jalal Hajigholamali September 20, 2010 at 11:54 am
+      Hi,
+      use “rsync” command..
+      Reply
+  182 leebert September 28, 2010 at 8:58 pm
+      Don’t forget systemtap (stap) which provides the equivalent of Solaris’
+      invaluable “dtrace” scripting utility. There’s a “dtrace” for Linux
+      project but I haven’t been able to get it to compile on my OpenSuSE 11.x.
+      On SuSE Linux is “getdelays” , enabled via the grub kernel command line
+      “delayacct” switch (starting with SuSE 10 Enterprise…). It’ll reveal the
+      amount of wait a given process spends waiting for CPU, disk (I/O) or
+      memory (swap), great for isolating lag in the system.
+      There are many many other monitoring tools (don’t know if these were
+      mentioned before) atopsar (atop-related), the sysstat/sar-related sa*
+      series (sadc, sadf, sa1), isag, saidar, blktrace (blktrace-blkiomon /
+      blktrace-blkparse), iotop, ftop, htop, nigel’s monitor (nmon), famd/
+      fileschanged, acctail, sysctl, dstat, iftop, btrace, ftop, iostat,
+      iptraf, jnettop, collectl, nagios, the RRD-related tools, the sys-fs
+      tools, big sister/brother … you could fill a book with them all.
+      Reply
+  183 Lonu Feruz September 29, 2010 at 8:37 am
+      please help where I can insert the command of route add of a node.
+      whenever the server is up i have to re do the command. I need to know
+      where i can put this command permanently
+      Reply
+  184 nagaraju October 1, 2010 at 4:47 am
+      IT IS SUPERB LIST
+      Reply
+  185 MAHENDRA SINGH October 2, 2010 at 12:09 pm
+      thanx
+      your collection is fantastic.
+      now i want to know that, how linux works
+      Reply
+  186 Rino Rondan October 7, 2010 at 7:37 pm
+      Thanx !!!
+      A really completed guide !
+      Reply
+  187 games October 8, 2010 at 1:43 am
+      thank you so much it’s very usefull for me
+      Reply
+  188 sameer October 15, 2010 at 6:14 am
+      ThanX..!!
+      can u send basic linux commands with ex
+      Thanks again
+      Reply
+  189 Gunjan October 17, 2010 at 3:42 pm
+      Nice post, its really useful and helping beginners to resolve server
+      issue
+      Reply
+  190 Moe October 19, 2010 at 9:13 am
+      another good tool for monitoring traffic and network usage:
+      vnstat
+      this also makes statistics for bandwidth usage over time which can be
+      display for daily, weekly and monthly usage. very useful if you don’t
+      want to install a web-based tool for this.
+      Reply
+        191 Stan April 21, 2011 at 12:35 pm
+            Nice history stats.
+            Reply
+  192 vishal sapkal October 19, 2010 at 2:54 pm
+      very nice
+      very importan tool of monetering
+      thanks for ……………………………………….
+      Reply
+  193 david a. lawson October 22, 2010 at 12:32 am
+      this rocks. it could not have come at a better time as i am into my first
+      networking course. thanks so much… i found this through stumbleupon
+      linux/unix
+      Reply
+  194 ram November 12, 2010 at 8:55 am
+      well,there are so good,i love them!
+      Reply
+  195 Nik November 15, 2010 at 5:01 pm
+      If you want to monitor CPU, memory, I/O and disk usage across multiple
+      servers you can use Librato Silverline – it’s a commercial product but
+      the first 8 cores are always free. You can actually do a lot more with
+      Silverline, i.e. place apps in individual containers, assign resource
+      quotas to containers, trigger events etc. but as a monitoring tool it is
+      really great too.
+      Reply
+  196 Rajkapoor M November 30, 2010 at 12:52 pm
+      Hi,
+      It’s awasome……………………..thanks to builder…..
+      Thanks&amp;Regards,
+      Rajkapoor M
+      Reply
+  197 jalexandre December 2, 2010 at 12:41 am
+      Perl?!
+      Reply
+  198 jalexandre December 2, 2010 at 12:44 am
+      And a good Sysadmin always can count with you prefered script language.
+      I using perl for monitoring a lot of basic infra structure services, like
+      DHCP, DNS, Ldap, and Zabbix for generate alarms and very nice graphs.
+      Reply
+  199 Sarath Babu M December 11, 2010 at 9:07 am
+      Hi,
+      One of My Professor is introduce about the Ubantu This os is I like very
+      much this flyover. Before I am Using XP but now I download all app. and I
+      all applications. i always love linux, great article.
+      sarath
+      Reply
+  200 Laxman December 23, 2010 at 9:37 am
+      Very interesting I will try
+      I hope it’ll help for me
+      Reply
+  201 sah December 23, 2010 at 10:19 pm
+      thanks alot … its a great help~!
+      Reply
+  202 KK December 25, 2010 at 4:19 am
+      Sumo is the best, the best that ever was and the best that ever will be.
+      Way to go Sumo
+      Reply
+  203 Deepak January 6, 2011 at 1:18 pm
+      Thanks …. This is really helpful….
+      Reply
+  204 mark January 7, 2011 at 7:05 am
+      How would I get a list of slow running websites on my server via ssh?
+      Reply
+  205 nigratruo January 13, 2011 at 6:41 pm
+      Great list, but why is TOP still used?
+      It is a highly limited utility. HTOP can do all top can, plus a ton of
+      stuff more:
+      1. use colors for better readabilty. In the 21st century, all computers
+      have a super hightech thing on their monitor called COLORS (sarcasm off)
+      2. allow process termination and sending of signals (even multi select
+      several processes)
+      3. show cpu / ram usage with visual bars instead of numbers
+      4. show ALL processes: top cannot do that, it just shows what is on the
+      screen. It is the main limiting factor that made me chuck it to the curb.
+      5. Use your cursor keys to explore what cannot be shown on the screen,
+      for example full CLI parameters from commands.
+      6. Active development. There are new features. Top is dead and there does
+      not seem to have been any active development for 10 years (and that is
+      how the tool looks)
+      Reply
+        206 coldslushy February 7, 2011 at 12:55 pm
+            Colors? Too resource intensive…
+            Reply
+              207 josh July 19, 2011 at 3:38 pm
+                  Colors do not always contrast well with the background.
+                  Reply
+  208 abdul hameed February 2, 2011 at 6:52 am
+      Dear All,
+      My Oracle Enterprice Linux getting very slow, when my local R12.1 start.
+      by using “top” command i found lot of Database users are running.
+      normally in other R12 instance only few Database users are available. can
+      any one tell me what might be the problem,, is it OS level issue or my
+      Application Issue.. where i have to start the tuning .
+      Kinldy advice me.
+      Thanks in Advance,
+      Abdul Hameed
+      Reply
+  209 Vimal February 9, 2011 at 8:02 pm
+      Shit, this looks great! Thanks very much.
+      Reply
+  210 Michael February 10, 2011 at 10:30 am
+      “My Oracle Enterprice Linux getting very slow, when my local R12.1
+      start.”
+      Arghh! Linux is turning into Windows!
+      These are super machines, people! Remember when 4.2BSD came out, and
+      people were saying “Unix is becoming VMS”? With 4.1 BSD, we had been
+      flying on one MIP machines (think of a one Mhz clock rate – three orders
+      of magnitude slower than today’s machines, not Ghz… Mhz!). So much was
+      added so quickly into 4.2 (kernels were no longer a few hundred kilobytes
+      at most) that performance took a nose dive. But then 4.3 BSD fixed things
+      for a while (with lots of optimizations such as unrolling the the
+      instructions in a bcopy loop till they just just filled an instruction
+      cache line). It didn’t hurt either that memory was getting cheaper, and
+      we could afford to upgrade our 30 user timesharing systems from four
+      Megabytes to eight Megabytes, or even more! It takes an awful amount of
+      software bloat (and blind ignorance of the principles we all learned in
+      our “combinatorial algorithms” classes) to be able to make machines that
+      are over a thousand times faster than the Vaxen we cut our teeth on be
+      “slow”.
+      Today’s Linux systems hardly feel much faster on multicore x86 machines
+      than they did on personal MicroVaxes or the somewhat faster Motorola
+      68020 based workstations (except for compilations, which now really
+      scream by – compiling a quarter meg kernel used to take hours, whereas
+      now it feels like barely seconds pass when compiling kernels that, even
+      compressed, are many times larger. But then, compiler writers for the
+      most part (25 years ago, Green Hills employees seemed a glaring exception
+      and I don’t know about Microsoft) have to prove they have learned good
+      programming practices before their skills are considered acceptable).
+      Other software, like the X server, still feels about the same as it did
+      in the eighties, despite today’s machines being so much faster. And
+      forget about Windows!
+      Reply
+  211 benjamin ngobi February 15, 2011 at 3:44 pm
+      wow these are great tools one should know.thank you so much coz it just
+      makes me better every day
+      Reply
+  212 Mousin February 16, 2011 at 9:52 am
+      Awesome Thanks a ton worth a bookmark..
+      Reply
+  213 krishna February 23, 2011 at 9:17 am
+      Friends I have typed the corrected question here below. Please let me
+      know if you can help:
+      Part1 : Find out the system resources — CPU Usage, Memory Usage, &amp;
+      How many process are running currently in “exact numbers”?, what are the
+      process?
+      Part2: Assume a process CACHE is running on the same system — How many
+      files are opened by CACHE out of the total numbers found above?? what are
+      the files used by CACHE? Whats the virtual memory used by the process.
+      What is the current run level of the process.
+      Part3: How many users or terminals are accessing the process CACHE?
+      Part4: The script should run every 15secs with the time of execution
+      &amp; date of script and the output should be given to a file
+      “richprocess” in the same order as that of the question.
+      Note: NO EXTERNAL TOOLS are allowed to be used with linux. Only shell
+      script should be written for the same!
+      Reply
+        214 krishna March 4, 2011 at 1:08 pm
+            I got the answer for it i used
+            $vi file1
+            #!/bin/bash
+            while [ true ]
+            do
+            echo “—$(date)—-” >> richprocess
+            echo ” 1. virtual mem of the system” >> richprocess
+            vmstat >> richprocess
+            echo ” 2. Free mem available in system” >> richprocess
+            free -m >> richprocess
+            echo ” 3. Mem used by cache &amp; to print files used by CACHE”
+            pmap -x `ps -A | pgrep CACHE` >> richprocess
+            sleep 15
+            done
+            :wq!
+            $bash file1 &amp;
+            $cat richprocess # to see the output..
+            I had a worse comment from someone to try a nonexistent website..
+            saying “www.Iwantothersdomyhomework.com” please dont post things
+            like this. I am asking help only because I want to learn. Thanks
+            for support from this site..
+            Reply
+        215 vasu April 16, 2011 at 2:07 am
+            1) lshw
+            3) w user
+            Reply
+  216 Ryan Barrett March 1, 2011 at 2:59 pm
+      Thanks great post!
+      Reply
+  217 ysha March 4, 2011 at 5:06 am
+      thanks.. i love it
+      Reply
+  218 Rohit Shrivastava March 10, 2011 at 5:01 am
+      Very good for beginners as well as professional. Thank you very much Sir
+      for sharing your knowledge. I really appreciate.
+      Reply
+  219 ctian March 11, 2011 at 8:41 am
+      nice one. it really works for a newby like me
+      Reply
+  220 Michael March 17, 2011 at 7:01 am
+      This is really helpful. I know these tools, but did not use them well.
+      Many thanks for your tips.
+      Reply
+  221 PRADEEP March 28, 2011 at 4:33 am
+      I ve updated kernel…now i need to update it without restart the server.
+      Plz help….
+      Reply
+  222 John April 5, 2011 at 9:29 pm
+      cant see nload on the list , easy showing of whats going on with your
+      network..
+      nload eth0 should show rest.
+      Reply
+  223 Parthyz April 12, 2011 at 6:30 am
+      Great Work man.. thanks a lot..
+      Reply
+  224 Matias April 12, 2011 at 12:46 pm
+      Nice list. I would add LogWatch, to send daily reports to your mail.
+      Reply
+  225 sasidaran April 15, 2011 at 5:16 am
+      Good collection of commands.
+      Reply
+  226 TiTiMan April 15, 2011 at 3:29 pm
+      Thanks for sharing a good list of useful commands.
+      I found a typo where there should not be a dash in front of the options
+      for
+      ps auxf
+      in the command for
+      Find Out The Top 10 Memory Consuming Process
+      and
+      Find Out top 10 CPU Consuming Process
+      Reply
+        227 vasu April 16, 2011 at 2:07 am
+            top
+            Reply
+        228 Me June 7, 2013 at 4:33 pm
+            Thanks for the typo correction; command works for me now.
+            Reply
+  229 Sachin Jain April 18, 2011 at 2:16 pm
+      Thanks for sharing such a use full commands,
+      friends i want to watch terminal session, which is logged in vai ssh
+      could you please help me??
+      Reply
+  230 chandu May 6, 2011 at 3:06 am
+      Plz help me how write the firewall rules in linux.
+      Reply
+  231 Jalal Hajigholamali May 6, 2011 at 12:40 pm
+      Hi,
+      see manual page of iptables and get examples from google
+      Reply
+  232 cypherb0g May 6, 2011 at 7:56 pm
+      useful stuff!
+      Reply
+  233 sudipta June 3, 2011 at 4:58 am
+      GR8 effort … Worth 2 b appreciated
+      Reply
+  234 Liunx June 10, 2011 at 7:56 am
+      That’s great!
+      thanks very much.
+      Reply
+  235 foster June 16, 2011 at 11:13 pm
+      Nagios fork Icinga should be on people’s radar as well.
+      https://www.icinga.org/
+      Reply
+  236 Jalaluddin June 24, 2011 at 6:55 am
+      Hi
+      I want to learn linux firewall and file server from base.
+      Can u sujjest me, in which link i can get all those useful material.
+      Thank You
+      Reply
+  237 Adil Husain June 30, 2011 at 10:43 am
+      Nice list … i’ll bookmark it for quick ref.
+      Reply
+  238 Bhanu Kashyap July 9, 2011 at 5:26 pm
+      Its Very Useful For Us….
+      Thanks….!!
+      Reply
+  239 Raivis July 12, 2011 at 5:48 am
+      systemgraph – http://www.decagon.de/sw/systemgraph/
+      Nice graphical system statistics RRDTool frontend which produces hourly,
+      daily, weekly, monthly … graphs of various system data. At the moment it
+      provides graphs for memory usage, cpu info, cpu frequency, disk iostat,
+      number of users, number of processes, number of open files, number of tcp
+      connections, system load, network traffic, protocl statistic, harddisk/
+      partition usage and temperatures, privoxy proxy statistic, ntpdrift, fan
+      status and system temperatures.
+      It is simple and it doesn’t require snmp. It consists only of some shell
+      and perl scripts.
+      Reply
+  240 Aviv.A July 14, 2011 at 10:30 pm
+      You forgot the command “htop” :D
+      Reply
+  241 Laurens July 15, 2011 at 10:16 pm
+      An other interesting program wich hasn’t been mentioned yet is Midnight
+      Commander (mc). At least it’s my favourite file manager in a console
+      environment.
+      Thanks all for your contributions. There are a lot of interesting
+      programs wich I already use, or certainly will be using in the future.
+      Reply
+  242 Sravi Raj July 19, 2011 at 5:03 am
+      Nice List
+      Reply
+  243 andy July 21, 2011 at 8:48 am
+      NO PRINT FUNKTION ? BIG FAIL IN YOUR FACE…damn why is every hole blogging
+      but a printfunktion is missing ? i dont need the scrappie comments in my
+      prints…..
+      Reply
+        244 Tommie September 11, 2011 at 8:27 am
+            Nice Roundup. However, I love you not having a print function. I am
+            able to print what I need without it… ;)
+            htop missing? :)
+            Reply
+              245 nixCraft September 11, 2011 at 12:21 pm
+                  To see a print version just append /print to the end of the
+                  url.
+                  Reply
+  246 GEORGE FAREED July 25, 2011 at 8:43 pm
+      thaaaaaaaaaaaanks alot :)
+      its useful informations :)
+      Reply
+  247 apparao August 3, 2011 at 11:36 am
+      Thanks
+      Reply
+  248 kiran.somidi August 3, 2011 at 12:47 pm
+      traceroute
+      Reply
+  249 kiran.somidi August 3, 2011 at 12:49 pm
+      tarceroute coomand is not their
+      Reply
+  250 Lalit Sharma August 7, 2011 at 2:13 pm
+      how can i copy all this?
+      Reply
+  251 amit lamba August 29, 2011 at 8:16 am
+      m using ubuntu 9.10 on system but problem is regarding internet …. unable
+      to connect with internet…
+      waiting for useful reply
+      Reply
+  252 Daniel Brasil August 30, 2011 at 10:03 pm
+      Very good post. I’ve some problems trying to figure out historical data
+      about disk usage. I still dont know a good tool for that. sar is
+      wonderful but it’s unable to record disk usage per process. You know any
+      tool for that?
+      Reply
+        253 greg January 6, 2012 at 6:30 pm
+            most monitoring tools like nagios, cacti, and zabbix give you the
+            ability to trend your disk usage, and even alert at certain
+            capacity points.
+            Reply
+  254 jock September 6, 2011 at 2:45 am
+      Its great, but i’m having a little inconvenient, i want to look the
+      detail for a process, exactly from apache, but the result is always the
+      seem, any one have a trick for see them? explaining better, i have a
+      process from apache but not die, it keep for a long time using the
+      resource and overloading the machine, when i see with a “ps auxf” the
+      result is
+      apache 32327 85.7 0.5 261164 39036 ? R 22:49 0:49 \_ /usr/sbin/httpd
+      I want see wath is doing this process “32327″ exactly, any idea?
+      Reply
+        255 greg January 6, 2012 at 7:13 pm
+            you can try strace as mentioned in the tools and you can also look
+            at the files in /proc/PID/ (so /proc/32327 for you)
+            Reply
+  256 eeb2 September 7, 2011 at 9:25 pm
+      Thanks for posting this list. Keep up the good posts!
+      Reply
+  257 khupcom September 12, 2011 at 8:30 am
+      I’m using monitorix and vnstat to monitor my servers
+      Reply
+  258 Gaurav kuamr jha October 2, 2011 at 7:42 am
+      Great it was bagger description for me.
+      This is article has solved my lot of problems
+      thanks for this
+      gkjha009
+      Reply
+  259 x@y.com October 8, 2011 at 10:14 am
+      thanks :)
+      Reply
+  260 Peter Green October 15, 2011 at 3:29 pm
+      Great article, there are many great suggestions! I want to contribute
+      with these two:
+      GoAccess – real-time Apache/nginx log analyzer and viewer, runs in a
+      terminal in *nix systems.
+      CCZE – modular log colorizer
+      Reply
+  261 cirrus October 21, 2011 at 10:44 am
+      great post cuz , very informative for recent nix converts “PCLinuxOS#1″
+      Reply
+  262 David Bothwell November 3, 2011 at 4:27 pm
+      I have just recently released my first open source project the Remote
+      Linux Monitor, which you can find at here . I modeled it on Gnome’s
+      System Monitor and I would love get your feedback on it. Thanks.
+      Reply
+  263 Ferenc Varga November 4, 2011 at 10:06 pm
+      for http traffic, i suggest to use justniffer.
+      Reply
+  264 bishow November 8, 2011 at 2:22 pm
+      yeah really nice post !!!
+      It’s really help me but how about the centos linux command can anyone
+      tell me about that, all the linux command will be same for the all
+      versions of linux (Is it wright guys) .
+      or
+      please email me if you know some code of contos linux cause i using this
+      lunux.
+      regards,
+      Reply
+  265 Unni November 11, 2011 at 1:39 am
+      Well written , keep up the good work ..
+      ….
+      Thanks,
+      Unni
+      Reply
+  266 Gmaster December 2, 2011 at 12:30 pm
+      Great job in compiling all the utils in one nice post. Thank you very
+      much!
+      Reply
+  267 Denis December 9, 2011 at 10:30 pm
+      Great stuff, nice to have it all in one place. :-)
+      Reply
+  268 manna December 12, 2011 at 5:09 am
+      Am working in small company having around 45 employees,we r using linux
+      server in our office, i need to checkout or monitor the user’s website,
+      which they are accessing in office hours,Please any one suggest me with
+      correct command. Thanks
+      Reply
+  269 Sibbala Govardhan Raju December 13, 2011 at 10:08 am
+      Dear Sir,
+      My Name is Govardhan Raju from TIRUPATI, ANDHRA PRADESH. working as a
+      linux (RHEL4) operator. I want to take data backup daily. Is there any
+      posibility to take todays date files only ? Please suggest me the
+      commands which are useful to take backup daily with syntax.
+      Thanking U Sir,
+      S Govardhan Raju
+      Reply
+        270 Kash January 15, 2012 at 2:41 pm
+            This is monitoring article not backup article??? Search your
+            question somewhere else.
+            Reply
+  271 bhaskar February 6, 2012 at 7:57 pm
+      Hi, I’m using windows 7 version. how to access the UNIX commands in
+      windows plat form without installing any set up file or UNIX Operating
+      System.
+      Could you please suggest any to me.
+      Thanks,
+      Reply
+  272 Steve February 13, 2012 at 4:11 pm
+      I feel an important one is psacct.. Should have at least made the list.
+      Very useful to track what commands/users are eating cpu time.
+      Reply
+  273 AL February 24, 2012 at 12:55 pm
+      There is another tool we use for system monitoring, it’s from IBM called
+      NMON – pretty good tool, I recommend it.
+      AL
+      Reply
+  274 sudhir menon March 21, 2012 at 7:10 am
+      nfsiostat is a great small command on linux
+      Reply
+  275 nishhhh March 22, 2012 at 2:15 pm
+      nice collection..referencing related articles are like ‘feathers in the
+      cap’ !!
+      appreciate it..thanks!
+      Reply
+  276 naveen March 23, 2012 at 8:54 am
+      Dear all ,
+      I have deployed some 40 routers in the cafes,60 more in have to deploy in
+      diff region/areas.I want to monitor the Wifi routers sitting in one
+      place.
+      I have connected Debian installed thin client to each router to provide
+      internet to the customers @ cafe,free browsing for 30 mins.
+      Can some one suggest me a tool for monitoring the Routers &amp; my debian
+      machine performance.
+      Regards
+      Naveen C
+      Reply
+        277 naveen March 23, 2012 at 8:58 am
+            The router model is DAP-1155 Wireless N 150 i have purchased some
+            100 and i am planning to buy 300 more.
+            pls do help me
+            Thanks in advance
+            Naveen C
+            Reply
+        278 LTJX August 2, 2012 at 3:08 pm
+            Such routers often include a management/monitoring package, which
+            may be more immediately useful than using Debian-based commands,
+            and the router software may allow for viewing the multiple routers
+            you describe from a single screen. I know that the latest NETGEAR
+            wireless routers include a software package like this.
+            But, why just 30 minutes per customer? Isn’t that the wrong message
+            to give the cafe customers?: Like, hurry up and drink your coffee/
+            tea, and then get out!!
+            Maybe you could try a one hour limit and see what happens. Linux is
+            much more efficient than many people realize, even under heavy
+            usage.
+            I think that Starbucks and similar shops in North America tend to
+            offer unlimited Internet access with any purchase – and most don’t
+            really seem to enforce the purchase requirement, unless a
+            “freeloader” is annoying or being offensive to other customers,
+            etc.
+            Reply
+              279 Stan August 6, 2012 at 6:25 am
+                  Have you tried MRTG to monitor your routers. More for just
+                  network
+                  http://oss.oetiker.ch/mrtg/
+                  Reply
+  280 Eric April 6, 2012 at 1:18 pm
+      Great post! Some of these I never thought to use that way. When using
+      free I will often use the -m option to display in Mb. (Example: free -m)
+      Reply
+  281 sudarshan April 11, 2012 at 6:17 am
+      Hi Team,
+      I required to find the hardware information in linux, can you please
+      advise.
+      I recieved alert as below:
+      Tivoli MINOR for : Accelerator board battery failed
+      thanks
+      sudarshan
+      Reply
+        282 Prasad August 17, 2012 at 6:23 pm
+            Just do
+            # uname
+            for specific details do:
+            # uname –help
+            Reply
+  283 Navneet April 21, 2012 at 10:34 am
+      Thanks Vivek,
+      For Posting this. It is very useful for Beginners as well.
+      Keep the Great work going on…..
+      Reply
+  284 Shreyansh Modi May 2, 2012 at 6:04 pm
+      Great Share :)
+      After using a few of these commands I am feeling like I am an Linux
+      Operations Engineer ;)
+      Reply
+  285 Ravi May 9, 2012 at 6:17 pm
+      Great and useful information.
+      Thanks
+      Reply
+  286 Michael May 10, 2012 at 10:10 pm
+      Your forgot monit (I dont care why it failed at 3a.m. – just fix it and
+      tell me!) and collectd (just record how things are going over the months,
+      without freaky sar..)
+      Michael ;)
+      Reply
+  287 Omar Osorio June 5, 2012 at 8:27 pm
+      lshw -short
+      Reply
+  288 vvvv June 12, 2012 at 3:50 am
+      I Liked it too thank you)
+      Reply
+  289 oran00b June 16, 2012 at 7:05 pm
+      excellent and concise info. For people who are not dedicated Linux Admin
+      but need some tools to work with Linux, this is excellent!
+      Reply
+  290 darkfader July 3, 2012 at 5:14 pm
+      Learn to use sar well and you’ll never need to use iostat, vmstat, etc.
+      Reply
+  291 William G. Loughran July 11, 2012 at 1:32 pm
+      Excellent – can’t thank you enough.
+      Not sure what CIFS ‘tools’ we were using – not SAMBA
+      Reply
+  292 Vichuz July 12, 2012 at 2:17 am
+      Keep up the nice work.
+      Reply
+  293 seema July 17, 2012 at 8:54 am
+      pl help me
+      as i am new in linux i am copying a folder in
+      /filesystem/usr/local …. form pen derive , but it is giving error msg ”
+      no permission ”
+      pl help
+      Reply
+  294 Sandeep July 17, 2012 at 12:19 pm
+      Its really useful ….nice one..I liked it!!!
+      Reply
+  295 Praveen Reddy July 19, 2012 at 5:29 am
+      Hi,
+      How to take data back in Linux Enterprise 6 daily basis and how to speed
+      up (refresh) in linux. is there any specific commands for this???
+      help me out of this…
+      Reply
+  296 Chetan July 25, 2012 at 7:40 am
+      One of my fav network traffic monitoring tool is iftop
+      Reply
+  297 Don Saulo August 2, 2012 at 10:54 am
+      Good job, guys!
+      Thanks for share.
+      Reply
+  298 netman August 26, 2012 at 3:49 am
+      thanks for your good articles
+      Reply
+  299 balwant September 1, 2012 at 5:46 pm
+      very very nice..
+      Reply
+  300 chinta October 1, 2012 at 3:01 pm
+      very usefull
+      Reply
+  301 Carlos A. Junior October 1, 2012 at 4:35 pm
+      +1
+      Great post…now i’m think more prepared to find an strange memory usage on
+      apache server ¬¬.
+      Great post.
+      Reply
+  302 Anup October 5, 2012 at 11:57 am
+      Nice job
+      Reply
+  303 Richard Cain October 11, 2012 at 7:09 am
+      My new favourite tool is “systemd.analyze”. It is great for pin-pointing
+      bottle-necks in startup. It can produce a very nice plot of every
+      process, allowing you instantly see what’s holding things up.
+      Reply
+  304 Girijesh October 16, 2012 at 3:54 am
+      very informative…!!!
+      Thanks a ton.. :)
+      Reply
+  305 Shekhar October 22, 2012 at 9:30 am
+      What is tool to get All activity info. Like any user create/delete/move
+      file or directory information???
+      Reply
+  306 Rahul November 8, 2012 at 9:26 am
+      +100
+      Reply
+  307 Hannes Dorn November 8, 2012 at 10:46 pm
+      Instead of Cacti I prefer munin. Installation and configuration is easy
+      and on monitored systems, only a small client is needed.
+      Reply
+  308 xuedi November 11, 2012 at 5:50 pm
+      I would replace top with htop, it extents top with a much nicer ncurses
+      and lots of functions …
+      Reply
+  309 Bill November 14, 2012 at 3:02 pm
+      Great list, Shekhar For File Activity etc, I use vigil and vlog client to
+      create the logs
+      Reply
+  310 Vishal November 15, 2012 at 6:26 am
+      try one for tool to report network interfaces bandwith just like vmstat/
+      iostat
+      # ifstat
+      Reply
+  311 Vishnuprasad November 25, 2012 at 3:41 pm
+      And I am using “watch” utility. This is basically not a system monitoring
+      tool. But in some case we need to watch the out put of a command
+      continuously. That time this is not easy to enter the same command all
+      the time and watch the output. In that case you can use this utility. You
+      can set the interval of each refresh.
+      Eg: watch -n 10 df -Th (this is just an example)
+      This command will give you the output of df -Th in each 10 seconds. Then
+      you can easily measure the hard disk usage.
+      Cheers…!
+      Reply
+  312 Vishnuprasad November 25, 2012 at 3:43 pm
+      A better Server Management Software…
+      http://www.webmin.com/
+      Cheers…!
+      Reply
+  313 Konstantin November 28, 2012 at 3:02 am
+      I’d also add ‘monit’ utility, to monitor assorted services and perform
+      actions 9such as restarting the stopped service).
+      Reply
+  314 jlarchev December 15, 2012 at 7:21 am
+      Hi all,
+      A nice monitoring tool we’re using for years :
+      http://sysusage.darold.net
+      Reply
+        315 pechalbata.com January 2, 2013 at 2:52 pm
+            Great tool! Thanks!
+            Reply
+  316 Uday Vallamsetty December 31, 2012 at 6:03 pm
+      All of these are must have tools for doing any analysis/monitoring of
+      activity on Linux boxes. Thanks for collecting everything into a concise
+      space.
+      Reply
+  317 Lucy January 2, 2013 at 11:11 pm
+      Thank you for this great post is it very helpful for someone that is
+      starting out.
+      Reply
+  318 peter January 11, 2013 at 5:04 am
+      very useful article..im a reader of both nixcraft and cyberciti.. well
+      done
+      Reply
+  319 veera February 7, 2013 at 7:00 am
+      Very nice… Thanks for the effort…..
+      Reply
+  320 sinlir February 8, 2013 at 10:29 am
+      Very nice!
+      Reply
+  321 wanie February 12, 2013 at 10:38 am
+      Hi..
+      i would know about your opinion…i must do the project about monitoring
+      devices availability…
+      what the software in linux about this and i must editing the coding
+      software.
+      Reply
+  322 Ankit Srivastava February 26, 2013 at 10:01 pm
+      You guys are awesome.
+      I love this website :)
+      Reply
+  323 Mayur April 19, 2013 at 11:14 am
+      Please can somebody help me to with Autosys/ Control M sheduling tool. I
+      ‘m new to both these tools and never used them. want some tutorials to
+      learn any of these tools for beginners .
+      also, which unix commands are important for production support guys apart
+      from normal commands like Grep,find,less,more etc.
+      any help in form of documents / tutorials is appreciated…
+      thanks in advance…
+      appreciate ur reply on my maild id
+      Reply
+  324 chandan June 1, 2013 at 6:56 am
+      It helped me a lot.
+      Thanks a lot and even more.
+      Reply
+  325 Shreehari June 4, 2013 at 12:31 pm
+      Its really awesome!!
+      Reply
+  326 mohsin June 6, 2013 at 6:46 pm
+      TQ, Very helpful tips… Just my $0.02; ETHERAPE for linux is a free
+      graphical tool http://etherape.sourceforge.net/ which is really helpful
+      to help monitor network traffic in a network segment. Many instances i
+      managed to pinpoint which PC/server is heavily broadcasting packets that
+      caused network slow-down.. tq
+      Reply
+  327 nickchacha June 8, 2013 at 11:38 am
+      This are very helpful tips. Thank you chief.
+      Am a newbie in SysAdmin and i this commands will come in hardy.
+      Reply
+  328 Kristoffer June 14, 2013 at 3:43 pm
+      Don’t forget cowsay!
+      Reply
+  329 Thusitha Nuwan July 1, 2013 at 4:28 am
+      Thanks very much for this list.
+      It was very useful.
+      Reply
+  330 Lukey July 20, 2013 at 12:55 am
+      I”m using the Helper MonkeyTool as a portable ssh Java based interface
+      for Unix/Linux system administration and monitirng.
+      http://sourceforge.net/projects/sshadmincontrol/files/
+      Reply
+  331 jasoncabahug July 22, 2013 at 5:26 am
+      thankz for this tips it was very useful
+      to me.. get more updates about open source..=)
+      Reply
+  332 BinaryTides July 28, 2013 at 4:08 am
+      Thanks, the list is very useful
+      Reply
+  333 Rajkumar kathane September 26, 2013 at 5:08 am
+      hi
+      thank u for sharing ur knowledge very useful.
+      Reply
+  334 erm3nda September 27, 2013 at 11:29 pm
+      Thx for that usefull info:
+      Even if we use or not some web host managers, know manual usage of some
+      tools is a must have for a sysadmin, or almost for decent ones… What will
+      you do when the host manager dont work? Who have to repair it? Is You and
+      you will need a real knowledge about what’s on your hands :)
+      So many thanks again.
+      Reply
+  335 vikas October 28, 2013 at 1:28 pm
+      great help thanks a ton
+      Reply
+  336 dk November 5, 2013 at 4:25 am
+      kindly share some usefull linux commands and configuration setup
+      Reply
+  337 Ramesh December 2, 2013 at 1:31 pm
+      Excellent Article
+      Reply
+  338 Piyush Dangodra January 7, 2014 at 3:29 am
+      Excellent Post – keep up the good work : )
+      Reply
+  339 maltris January 11, 2014 at 8:46 am
+      The ps syntax is wrong.
+      For memory:
+      ps aux |sort -nrk 4 |head -10
+      For cpu:
+      ps aux |sort -nrk 3 |head -10
+      Reply
+  340 Mahesh Vakharia March 7, 2014 at 4:16 am
+      EXCELLENT work , one humble suggestion . when you use top command , or
+      any command , please do mention the way to clear the work load of system
+      so that the system can be speeded up .
+      Regards . Very Informative.
+      Reply
+  341 tungdt March 22, 2014 at 2:52 pm
+      Very useful article.thanks
+      Reply
+Cancel_reply
+Leave a Comment
+[author              ]Name *
+[email               ]E-mail *
+⁰ Notify me of followup comments via e-mail.
+[Submit]
+Previous post: My_10_UNIX_Command_Line_Mistakes
+Next post: Download_Of_the_Day:_Firefox_3.5_For_Windows,_Linux,_Mac_OS_X
+[twitter] [youtube] [googleplus] [facebook] [rss] [email]
+    * [To search, type and hit enter]
+    * **** Related Posts ****
+          o [How_to:_Troubleshoot_UNIX_/_Linux_BIND_DNS_server_problems]How_to:
+            Troubleshoot_UNIX_/_Linux_BIND_DNS_server_problems
+          o [ss:_Display_Linux_TCP_/_UDP_Network_and_Socket_Information]ss:
+            Display_Linux_TCP_/_UDP_Network_and_Socket_Information
+          o [Linux_/_UNIX:_Scanning_network_for_open_ports_with_nmap
+            command]Linux_/_UNIX:_Scanning_network_for_open_ports_with_nmap
+            command
+          o [Quick_Tip:_Find_Hidden_Processes_and_Ports_[_Linux_/_Unix_/
+            Windows_]]Quick_Tip:_Find_Hidden_Processes_and_Ports_[_Linux_/_Unix
+            /_Windows_]
+          o [Get_Detailed_Information_About_Particular_IP_address_Connections
+            Using_netstat_Command]Get_Detailed_Information_About_Particular_IP
+            address_Connections_Using_netstat_Command
+          o [Security_Tip:_Find_Out_Current_Working_Directory_Of_A_Process
+            Running_on_Linux/Unix]Security_Tip:_Find_Out_Current_Working
+            Directory_Of_A_Process_Running_on_Linux/Unix
+          o [Linux_List_The_Open_Ports_And_The_Process_That_Owns_Them]Linux
+            List_The_Open_Ports_And_The_Process_That_Owns_Them
+          o [Tentakel_to_execute_commands_on_multiple_Linux_or_UNIX
+            Servers]Tentakel_to_execute_commands_on_multiple_Linux_or_UNIX
+            Servers
+          o [How_do_I__find_out_what_shell_I’m_using?]How_do_I_find_out_what
+            shell_I’m_using?
+          o [Monitor_and_restart_Apache_or_lighttpd_webserver_when_daemon_is
+            killed_]Monitor_and_restart_Apache_or_lighttpd_webserver_when
+            daemon_is_killed
+    * Tweets_by_@nixcraft
+    * **** [RSS] Latest_Linux/Unix_Q_&amp;_A ****
+          o Fix:_/bin/dbus-launch_terminated_abnormally_without_any_error
+            message_and_solution
+          o X11_forwarding_request_failed_on_channel_0_Error_and_Solution
+          o HowTo:_Uninstall_MySQL_Server_in_Ubuntu_Linux
+          o Linux/Unix:_Find_Command_Ignore_Case_Insensitive_Search
+          o HowTo:_Setup_SSH_Keys_on_a_Linux_/_Unix_System
+          o Linux_/_Unix:_chroot_Command_Examples
+          o Minify_and_Compress_CSS_&amp;_Javascript_Files_At_a_Linux/Unix
+            Shell_Prompt
+          o CentOS_Install_Lighttpd_Web-server_With_yum_Command
+          o CentOS_Install_Java_SDK_using_yum_Command
+          o CentOS:_rpmdb:_PANIC:_fatal_region_error_detected;_run_recovery
+            error_and_solution
+          o HowTo:_Update_gcutil_/_gcloud_Components_On_a_Linux_/_Unix_/_OS_X
+          o curl_Command_Resume_Broken_Download
+          o FreeBSD_Show_Disk_Quota_Limits_Command
+          o Explain:_{,}_in_cp_or_mv_Bash_Shell_Commands
+          o Ubuntu_Copy_File_Command
+          o Linux:_Log_Suspicious_Martian_Packets_/_Un-routable_Source
+            Addresses
+          o Increase_NFS_Client_Mount_Point_Security_For_a_Web-Server_noexec,
+            nosuid,_nodev_Options
+          o HowTo:_Prevent_Yum_From_Upgrading_The_Kernel_On_a_CentOS_/_Red_Hat
+            Enterprise_Linux
+          o Unix_/_Linux:_Check_New_Files_In_File_System_/var/www/uploads/
+          o Linux_/_Unix:_Check_Last_Time_User_Logged_In_On_The_System
+    * **** Subscribe to nixCraft ****
+      Learn something new about Linux/Unix by email
+      Enter your email address:
+      [email               ]
+      [Subscribe]
+©2004-2014 nixCraft. All rights reserved. Privacy_Policy - Terms_of_Service -
+Questions_or_Comments - We are proudly powered by Linux + Nginx + WordPress.
+The content is copyrighted_to_nixCraft and may not be reproduced on other
+websites.
